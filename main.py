@@ -1,7 +1,6 @@
 import os
 import random
 import time
-import tkinter
 
 from Profile import *
 
@@ -17,7 +16,19 @@ def clear():
 def validatelogin():
     fichier=open("login-password.txt","r")
 
-    
+def fenetremain():    
+    fenetre= Tk()
+    fenetre.title("Library Efrei")
+    fenetre.geometry("800x500")
+    #Boutton Profile 
+    Frame1 = Frame(fenetre, borderwidth=2, relief=GROOVE)
+    Frame1.pack(side=LEFT, padx=30, pady=30)
+    Label(Frame1).pack(padx=10, pady=10)
+    label = Label(fenetre, text="Texte par défaut", bg="yellow")
+    label.pack()
+    profile=Button(Frame1,text="Acceder aux profiles",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
+    profile.pack(padx=10, pady=10)
+    fenetre.mainloop()  
 
 def sceneprofile():
     #Username
@@ -29,7 +40,7 @@ def sceneprofile():
     passwordLabel = Label(fenetre,text="Mot de passe").grid(row=1,column=0)
     passwordentry = Entry(fenetre,textvariable=password,show='*',width=30).grid(row=1,column=1)
     #gender
-    sexe=tkinter.StringVar()
+    sexe=StringVar()
     sexeOption = ["Homme", 
                   "Femme",
                   "Non Déterminé"]
@@ -140,22 +151,9 @@ if __name__ == "__main__":
         {"name":"Lili","sexe":2,"age":2,"img_picture":4,"reading_style":2,"favorite_book":"Narnia"},
         {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
         ]
-        
-    fenetre= Tk()
-    fenetre.title("Library Efrei")
-    fenetre.geometry("800x500")
-    #Boutton Profile 
-    Frame1 = Frame(fenetre, borderwidth=2, relief=GROOVE)
-    Frame1.pack(side=LEFT, padx=30, pady=30)
-    Label(Frame1).pack(padx=10, pady=10)
-    label = Label(fenetre, text="Texte par défaut", bg="yellow")
-    label.pack()
-    profile=Button(Frame1,text="Acceder aux profiles",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
-    profile.pack(padx=10, pady=10)
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
     liste_readers = delete_readers(2,liste_readers)
-
-
+    fenetremain()
     # ajouter_livre("Le Hobbit")
     # modifier_livre("Le Hobbit","Narnia")
