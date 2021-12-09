@@ -153,9 +153,11 @@ if __name__ == "__main__":
     profile=Button(Frame1,text="Acceder aux profiles",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
     profile.pack(padx=10, pady=10)
 
+
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
     liste_readers = delete_readers(2,liste_readers)
 
+    fenetre.mainloop()
 
     # ajouter_livre("Le Hobbit")
     # modifier_livre("Le Hobbit","Narnia")
