@@ -37,7 +37,6 @@ def sceneprofile():
     gender = OptionMenu(fenetre,sexe, *sexeOption)
     gender.grid(row=2,column=1)
     sexeLabel = Label(fenetre,text="Sexe").grid(row=2,column=0)
-    genderLabel= Label(fenetre,textvariable=sexe,font=("Helvetica", 10)).grid(row=2,column=1)
     
     #Age
     age = IntVar()
@@ -58,8 +57,6 @@ def sceneprofile():
     w = OptionMenu(fenetre,style,*styleoption)
     w.grid(row=4,column=1)
     lectureLabel = Label(fenetre,text="style préferé").grid(row=4,column=0)
-    test = Label(fenetre,textvariable=style,font=("Helvetica", 10)).grid(row=4,column=1)
-
     
     
     
@@ -72,7 +69,7 @@ def sceneprofile():
 def ajouter_readers(liste_readers, number, name, age, genre, img_nbr, liste_like, reading_style):
     liste_readers.append({"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"})
     fichier = open("readers.txt", "a")
-    fichier.write("\n" + name + "," + str(genre) + "," + str(age) + "," + reading_style)
+    fichier.write("\n" + name + "," + str(genre) + "," + str(age) + "," + str(reading_style))
     fichier2 = open("booksread.txt", "a")
     fichier2.write("\n" + name)
     for a in liste_like:
@@ -128,11 +125,23 @@ def delete_readers(index_readers,liste_readers):
 
     liste_readers[index_readers] = None
     return liste_readers
-    
+
+def modifier_reader(liste_readers,index,number,name,age,genre,img_nbr,liste_like,reading_style):
+    with open("readers.txt","r") as fichier:
+        t = fichier.read()
+
+    with open("readers.txt", "w") as fichier:
+        fichier.write(t.replace(liste_readers[index]["name"] + "," + str(liste_readers[index]["sexe"]) + "," + str(liste_readers[index]["age"]) + "," + str(liste_readers[index]["reading_style"]),name + "," + str(genre) + "," + str(age) + "," + str(reading_style)))
+        print(liste_readers[index]["name"] + "," + str(liste_readers[index]["sexe"]) + "," + str(liste_readers[index]["age"]) + "," + str(liste_readers[index]["reading_style"]))
+        print(name + "," + str(genre) + "," + str(age) + "," + str(reading_style))
+    liste_readers[index] = {"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"} 
+
+    return liste_readers
+
 if __name__ == "__main__":
     liste_readers = [
         {"name":"Gilbert","sexe":1,"age":3,"img_picture":4,"reading_style":6,"favorite_book":"Narnia"},
-        {"name":"William","sexe":3,"age":2,"img_picture":4,"reading_style":7,"favorite_book":"Narnia"},
+        {"name":"William","sexe":3,"age":3,"img_picture":4,"reading_style":7,"favorite_book":"Narnia"},
         {"name":"AlienRoXoR17","sexe":2,"age":1,"img_picture":4,"reading_style":3,"favorite_book":"Narnia"},
         {"name":"anonyme","sexe":3,"age":3,"img_picture":4,"reading_style":2,"favorite_book":"Narnia"},
         {"name":"Lecteur_assidu","sexe":1,"age":1,"img_picture":4,"reading_style":3,"favorite_book":"Narnia"},
@@ -155,7 +164,9 @@ if __name__ == "__main__":
 
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
-    liste_readers = delete_readers(2,liste_readers)
+    # liste_readers = modifier_reader(liste_readers,1,2,"MathieuRAZR",2,2,4,[1,2,3],2)
+
+
 
     fenetre.mainloop()
 
