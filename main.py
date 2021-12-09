@@ -152,8 +152,15 @@ if __name__ == "__main__":
         {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
         ]
 
+
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
     liste_readers = delete_readers(2,liste_readers)
+<<<<<<< HEAD
     fenetremain()
+=======
+
+    fenetre.mainloop()
+
+>>>>>>> 53c7ea45d62863de26271e89ab21b699553b64bb
     # ajouter_livre("Le Hobbit")
     # modifier_livre("Le Hobbit","Narnia")
