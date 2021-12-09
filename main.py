@@ -1,6 +1,7 @@
 import os
 import random
 import time
+import tkinter
 
 from Profile import *
 
@@ -17,7 +18,6 @@ def validatelogin():
     fichier=open("login-password.txt","r")
 
 def fenetremain():    
-    fenetre= Tk()
     fenetre.title("Library Efrei")
     fenetre.geometry("800x500")
     #Boutton Profile 
@@ -48,7 +48,6 @@ def sceneprofile():
     gender = OptionMenu(fenetre,sexe, *sexeOption)
     gender.grid(row=2,column=1)
     sexeLabel = Label(fenetre,text="Sexe").grid(row=2,column=0)
-    genderLabel= Label(fenetre,textvariable=sexe,font=("Helvetica", 10)).grid(row=2,column=1)
     
     #Age
     age = IntVar()
@@ -69,8 +68,32 @@ def sceneprofile():
     w = OptionMenu(fenetre,style,*styleoption)
     w.grid(row=4,column=1)
     lectureLabel = Label(fenetre,text="style préferé").grid(row=4,column=0)
-    test = Label(fenetre,textvariable=style,font=("Helvetica", 10)).grid(row=4,column=1)
+    #Choisir livre lues 
+    var1 = IntVar()
+    var2 = IntVar()
+    var3 = IntVar()
+    var4 = IntVar()
+    var5 = IntVar()
+    var6 = IntVar()
+    var7 = IntVar()
+    var8 = IntVar()
+    var9 = IntVar()
+    var10 = IntVar()
 
+    Long_Walk_to_Freedom = Checkbutton(fenetre,text="Long Walk to Freedom",variable=var1, onvalue=1, offvalue=0).grid(row=6,column=0)
+    Things_I_Did_and_Things_I_Think_I_Did = Checkbutton(fenetre,text="Things I Did and Things I Think I Did",variable=var2, onvalue=1, offvalue=0).grid(row=6,column=1)
+    The_Bloody_Chamber = Checkbutton(fenetre,text="The Bloody Chamber",variable=var3, onvalue=1, offvalue=0).grid(row=6,column=2)
+    The_Memoirs_of_an_Amnesiac = Checkbutton(fenetre,text="The Memoirs of an Amnesic",variable=var4, onvalue=1, offvalue=0).grid(row=6,column=3)
+    The_Silence_of_the_Lambs = Checkbutton(fenetre,text="The Silence of the Lamb",variable=var5, onvalue=1, offvalue=0).grid(row=7,column=0)
+    The_Hunger = Checkbutton(fenetre,text="The Hunger",variable=var6, onvalue=1, offvalue=0).grid(row=7,column=1)
+    Wild_Eyes = Checkbutton(fenetre,text="Wild eyes",variable=var7, onvalue=1, offvalue=0).grid(row=7,column=2)
+    White_Teeth = Checkbutton(fenetre,text="White Teeth",variable=var8, onvalue=1, offvalue=0).grid(row=7,column=3)
+    The_Resisters = Checkbutton(fenetre,text="The Resisters",variable=var9, onvalue=1, offvalue=0).grid(row=8,column=0)
+    The_Power = Checkbutton(fenetre,text="The Power",variable=var10, onvalue=1, offvalue=0).grid(row=8,column=1)
+
+    #Bouton retourner au hub
+    hub=Button(fenetre,text="Acceder aux hub",highlightbackground='#3E4149',command=lambda: [clear(),fenetremain()])
+    hub.grid(row=9,column=2)
     
     
     
@@ -155,12 +178,7 @@ if __name__ == "__main__":
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
     liste_readers = delete_readers(2,liste_readers)
-<<<<<<< HEAD
+    fenetre= Tk()
     fenetremain()
-=======
-
-    fenetre.mainloop()
-
->>>>>>> 53c7ea45d62863de26271e89ab21b699553b64bb
     # ajouter_livre("Le Hobbit")
     # modifier_livre("Le Hobbit","Narnia")
