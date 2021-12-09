@@ -29,7 +29,9 @@ def fenetremain():
     profile=Button(Frame1,text="Acceder aux profiles",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
     profile.pack(padx=10, pady=10)
     fenetre.mainloop()  
-
+def truc(number,username,age,gender,img_nbr,liste_like,reading_style):
+    print(number,username,age,gender,img_nbr,liste_like,reading_style)
+    
 def sceneprofile():
     #Username
     username = StringVar() 
@@ -90,12 +92,60 @@ def sceneprofile():
     White_Teeth = Checkbutton(fenetre,text="White Teeth",variable=var8, onvalue=1, offvalue=0).grid(row=7,column=3)
     The_Resisters = Checkbutton(fenetre,text="The Resisters",variable=var9, onvalue=1, offvalue=0).grid(row=8,column=0)
     The_Power = Checkbutton(fenetre,text="The Power",variable=var10, onvalue=1, offvalue=0).grid(row=8,column=1)
-
+    #Convertir reading style en int
+    reading_style=1
+    if style.get() == "sci-fi":
+        reading_style=1
+    elif style.get() == "Biography":
+        reading_style=2
+    elif style.get() == "Horror":
+        reading_style=3
+    elif style.get()== "Romance":
+        reading_style=4       
+    elif style.get() == "Fable":
+        reading_style=5
+    elif style.get()=="History":
+        reading_style=6
+    elif style.get() == "Comedy":
+        reading_style=7           
+        
+    #Ajout des livres lues a liste_like
+    liste_like= []
+    if var1.get() == 1:
+        liste_like.append(1)
+    elif var2.get() == 1:
+        liste_like.append(2)
+    elif var3.get() == 1:
+        liste_like.append(3)
+    elif var4.get() == 1:
+        liste_like.append(4)
+    elif var5.get() == 1:
+        liste_like.append(5)
+    elif var6.get() == 1:
+        liste_like.append(6)
+    elif var7.get() == 1:
+        liste_like.append(7)
+    elif var8.get() == 1:
+        liste_like.append(8)
+    elif var9.get() == 1:
+        liste_like.append(9)
+    elif var10.get() == 1:
+        liste_like.append(10)
+    print(liste_like) 
     #Bouton retourner au hub
     hub=Button(fenetre,text="Acceder aux hub",highlightbackground='#3E4149',command=lambda: [clear(),fenetremain()])
-    hub.grid(row=9,column=2)
-    
-    
+    hub.grid(row=10,column=1)
+    #Convertir en str
+    username = str(username.get())
+    password = str(password.get())
+    sexe = str(sexe)
+    age = str(age)
+    #Sumbit button
+    number= 0
+    img_nbr = 3
+    #
+    Submit=Button(fenetre,text="S'inscire",highlightbackground='#3E4149',command=lambda: [clear(),truc(number,username,age,gender,img_nbr,liste_like,reading_style)()])
+    Submit.grid(row=10,column=3)
     
     #Ecrire et Lire dans fichier txt
     #fichier= open("login-password.txt","w")
@@ -106,7 +156,7 @@ def sceneprofile():
 def ajouter_readers(liste_readers, number, name, age, genre, img_nbr, liste_like, reading_style):
     liste_readers.append({"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"})
     fichier = open("readers.txt", "a")
-    fichier.write("\n" + name + "," + str(genre) + "," + str(age) + "," + reading_style)
+    fichier.write("\n" + name + "," + str(genre) + "," + str(age) + "," + str(reading_style))
     fichier2 = open("booksread.txt", "a")
     fichier2.write("\n" + name)
     for a in liste_like:
@@ -147,7 +197,6 @@ def delete_book(nom_livre):
     
     with open("books.txt", "w") as fichier:
         fichier.write(t.replace(nom_livre,str()))
-
 def delete_readers(index_readers,liste_readers):
     with open("readers.txt","r") as fichier:
             t = fichier.read()
