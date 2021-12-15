@@ -1,4 +1,5 @@
-from _typeshed import NoneType
+
+
 from io import UnsupportedOperation
 import os
 import random
@@ -16,6 +17,7 @@ def clear():
       widgets.destroy()
 
 def submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username,password,sexe,age):
+    global liste_readers
     liste_like=[]
     if var1.get() == 1:
         liste_like.append(1)
@@ -46,7 +48,7 @@ def submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,user
     print(liste_like)
     number=1
     img_nbr = 1
-    ajouter_readers(liste_readers,number,username,age,sexe,img_nbr,liste_like,reading_style)
+    ajouter_readers(number,username,age,sexe,img_nbr,liste_like,reading_style)
 
 
 
@@ -69,22 +71,28 @@ def fenetremain():
     fenetre.mainloop()  
 
 def scene_readers():
+    global liste_readers
     labels = []
+    edit = []
+    delete = []
     
     myFrame = Frame(fenetre).place(x=50, y=100)
-    print(liste_readers)
+    
     j=0
+    l = []
     for i in liste_readers: 
-        if i["name"] != None:
-            print(i)
-            print(i["name"])
+        if i != None:
             labels.append(Label(fenetre,text=i["name"]+" "+str(i["sexe"]) + " " + str(i["age"]) + " " + str(i["img_picture"]) + " " + str(i["reading_style"]) + " " + i["favorite_book"]))
-            labels[j].place(x=10,y=10+(30*j))
+            labels[j].grid(row=1*j,column=0)
+            edit.append(Button(fenetre,text="Edit"))
+            edit[j].grid(row=1*j,column=1)
+            delete.append(Button(fenetre,text="Delete",command= lambda:  [truc(delete[j]),scene_readers()]))
+            delete[j].grid(row=1*j,column=2)
             j+=1
-            
-
-
+def truc(a):
+    print(a)
 def sceneprofile():
+    global liste_readers
     #Username
     username = StringVar() 
     usernameLabel = Label(fenetre,text="Pseudo").grid(row=0, column=0)
@@ -183,7 +191,8 @@ def sceneprofile():
     #fichier.write(password)
     #fichier.close()
 
-def ajouter_readers(liste_readers, number, name, age, genre, img_nbr, liste_like, reading_style):
+def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_style):
+    global liste_readers
     liste_readers.append({"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"})
     fichier = open("readers.txt", "a")
     fichier.write("\n" + name + "," + str(genre) + "," + str(age) + "," + str(reading_style))
@@ -227,7 +236,8 @@ def delete_book(nom_livre):
     
     with open("books.txt", "w") as fichier:
         fichier.write(t.replace(nom_livre,str()))
-def delete_readers(index_readers,liste_readers):
+def delete_readers(index_readers):
+    global liste_readers
     with open("readers.txt","r") as fichier:
             t = fichier.read()
         
@@ -257,7 +267,6 @@ if __name__ == "__main__":
 
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
-    liste_readers = delete_readers(2,liste_readers)
     fenetre= Tk()
     fenetremain()
     # ajouter_livre("Le Hobbit")
