@@ -1,3 +1,4 @@
+from io import UnsupportedOperation
 import os
 import random
 import time
@@ -13,6 +14,38 @@ def clear():
     for widgets in fenetre.winfo_children():
       widgets.destroy()
 
+def submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username,password,sexe,age):
+    liste_like=[]
+    if var1.get() == 1:
+        liste_like.append(1)
+    if var2.get() == 1:
+        liste_like.append(2)
+    if var3.get() == 1:
+        liste_like.append(3)
+    if var4.get() == 1:
+        liste_like.append(4)
+    if var5.get() == 1:
+        liste_like.append(5)
+    if var6.get() == 1:
+        liste_like.append(6)
+    if var7.get() == 1:
+        liste_like.append(7)
+    if var8.get() == 1:
+        liste_like.append(8)
+    if var9.get() == 1:
+        liste_like.append(9)
+    if var10.get() == 1:
+        liste_like.append(10)
+    if sexe == "Homme":
+        sexe=1
+    elif sexe=="Femme":
+        sexe=2
+    elif sexe=="Non Déterminé":
+        sexe=3         
+    print(liste_like)
+    number=1
+    img_nbr = 1
+    ajouter_readers(liste_readers,number,username,age,sexe,img_nbr,liste_like,reading_style)
 
 def validatelogin():
     fichier=open("login-password.txt","r")
@@ -20,18 +53,27 @@ def validatelogin():
 def fenetremain():    
     fenetre.title("Library Efrei")
     fenetre.geometry("800x500")
-    #Boutton Profile 
+    #Boutton inscription 
     Frame1 = Frame(fenetre, borderwidth=2, relief=GROOVE)
     Frame1.pack(side=LEFT, padx=30, pady=30)
     Label(Frame1).pack(padx=10, pady=10)
     label = Label(fenetre, text="Texte par défaut", bg="yellow")
     label.pack()
-    profile=Button(Frame1,text="Acceder aux profiles",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
-    profile.pack(padx=10, pady=10)
+    inscription=Button(Frame1,text="S'inscrire",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
+    inscription.pack(padx=10, pady=10)
+    profile = Button(fenetre,text="Acceder aux profiles existants",command=lambda: [clear(),scene_readers()])
+    profile.pack(padx=1,pady=200)
     fenetre.mainloop()  
-def truc(number,username,age,gender,img_nbr,liste_like,reading_style):
-    print(number,username,age,gender,img_nbr,liste_like,reading_style)
-    
+
+def scene_readers():
+    myFrame = Frame(fenetre).place(x=50, y=100)
+    for dict in liste_readers: 
+        print(dict)
+        
+
+        
+
+
 def sceneprofile():
     #Username
     username = StringVar() 
@@ -81,17 +123,21 @@ def sceneprofile():
     var8 = IntVar()
     var9 = IntVar()
     var10 = IntVar()
+    liste_like=[]
+    Long_Walk_to_Freedom = Checkbutton(fenetre,text="Long Walk to Freedom",variable=var1, onvalue=1, offvalue=0,).grid(row=6,column=1)
+    Things_I_Did_and_Things_I_Think_I_Did = Checkbutton(fenetre,text="Things I Did and Things I Think I Did",variable=var2, onvalue=1, offvalue=0).grid(row=6,column=2)
+    The_Bloody_Chamber = Checkbutton(fenetre,text="The Bloody Chamber",variable=var3, onvalue=1, offvalue=0).grid(row=6,column=3)
+    The_Memoirs_of_an_Amnesiac = Checkbutton(fenetre,text="The Memoirs of an Amnesic",variable=var4, onvalue=1, offvalue=0).grid(row=7,column=0)
+    The_Silence_of_the_Lambs = Checkbutton(fenetre,text="The Silence of the Lamb",variable=var5, onvalue=1, offvalue=0).grid(row=7,column=1)
+    The_Hunger = Checkbutton(fenetre,text="The Hunger",variable=var6, onvalue=1, offvalue=0).grid(row=7,column=2)
+    Wild_Eyes = Checkbutton(fenetre,text="Wild eyes",variable=var7, onvalue=1, offvalue=0).grid(row=7,column=3)
+    White_Teeth = Checkbutton(fenetre,text="White Teeth",variable=var8, onvalue=1, offvalue=0).grid(row=8,column=0)
+    The_Resisters = Checkbutton(fenetre,text="The Resisters",variable=var9, onvalue=1, offvalue=0).grid(row=8,column=1)
+    The_Power = Checkbutton(fenetre,text="The Power",variable=var10, onvalue=1, offvalue=0).grid(row=8,column=2)
+    livre = Label(fenetre,text="Livre lus").grid(row=6,column=0)
+    #Ajout des livres lues a liste_like
+    
 
-    Long_Walk_to_Freedom = Checkbutton(fenetre,text="Long Walk to Freedom",variable=var1, onvalue=1, offvalue=0).grid(row=6,column=0)
-    Things_I_Did_and_Things_I_Think_I_Did = Checkbutton(fenetre,text="Things I Did and Things I Think I Did",variable=var2, onvalue=1, offvalue=0).grid(row=6,column=1)
-    The_Bloody_Chamber = Checkbutton(fenetre,text="The Bloody Chamber",variable=var3, onvalue=1, offvalue=0).grid(row=6,column=2)
-    The_Memoirs_of_an_Amnesiac = Checkbutton(fenetre,text="The Memoirs of an Amnesic",variable=var4, onvalue=1, offvalue=0).grid(row=6,column=3)
-    The_Silence_of_the_Lambs = Checkbutton(fenetre,text="The Silence of the Lamb",variable=var5, onvalue=1, offvalue=0).grid(row=7,column=0)
-    The_Hunger = Checkbutton(fenetre,text="The Hunger",variable=var6, onvalue=1, offvalue=0).grid(row=7,column=1)
-    Wild_Eyes = Checkbutton(fenetre,text="Wild eyes",variable=var7, onvalue=1, offvalue=0).grid(row=7,column=2)
-    White_Teeth = Checkbutton(fenetre,text="White Teeth",variable=var8, onvalue=1, offvalue=0).grid(row=7,column=3)
-    The_Resisters = Checkbutton(fenetre,text="The Resisters",variable=var9, onvalue=1, offvalue=0).grid(row=8,column=0)
-    The_Power = Checkbutton(fenetre,text="The Power",variable=var10, onvalue=1, offvalue=0).grid(row=8,column=1)
     #Convertir reading style en int
     reading_style=1
     if style.get() == "sci-fi":
@@ -109,43 +155,17 @@ def sceneprofile():
     elif style.get() == "Comedy":
         reading_style=7           
         
-    #Ajout des livres lues a liste_like
-    liste_like= []
-    if var1.get() == 1:
-        liste_like.append(1)
-    elif var2.get() == 1:
-        liste_like.append(2)
-    elif var3.get() == 1:
-        liste_like.append(3)
-    elif var4.get() == 1:
-        liste_like.append(4)
-    elif var5.get() == 1:
-        liste_like.append(5)
-    elif var6.get() == 1:
-        liste_like.append(6)
-    elif var7.get() == 1:
-        liste_like.append(7)
-    elif var8.get() == 1:
-        liste_like.append(8)
-    elif var9.get() == 1:
-        liste_like.append(9)
-    elif var10.get() == 1:
-        liste_like.append(10)
-    print(liste_like) 
+    
     #Bouton retourner au hub
     hub=Button(fenetre,text="Acceder aux hub",highlightbackground='#3E4149',command=lambda: [clear(),fenetremain()])
-    hub.grid(row=10,column=1)
+    hub.grid(row=20,column=0)
     #Convertir en str
-    username = str(username.get())
-    password = str(password.get())
-    sexe = str(sexe)
-    age = str(age)
     #Sumbit button
-    number= 0
+    number= 1
     img_nbr = 3
     #
-    Submit=Button(fenetre,text="S'inscire",highlightbackground='#3E4149',command=lambda: [clear(),truc(number,username,age,gender,img_nbr,liste_like,reading_style)()])
-    Submit.grid(row=10,column=3)
+    Submit=Button(fenetre,text="S'inscire",highlightbackground='#3E4149',command=lambda: [clear(),submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username.get(),password.get(),sexe.get(),age.get())])
+    Submit.grid(row=10,column=1)
     
     #Ecrire et Lire dans fichier txt
     #fichier= open("login-password.txt","w")
