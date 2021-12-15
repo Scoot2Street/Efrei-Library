@@ -1,3 +1,4 @@
+from _typeshed import NoneType
 from io import UnsupportedOperation
 import os
 import random
@@ -47,6 +48,8 @@ def submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,user
     img_nbr = 1
     ajouter_readers(liste_readers,number,username,age,sexe,img_nbr,liste_like,reading_style)
 
+
+
 def validatelogin():
     fichier=open("login-password.txt","r")
 
@@ -66,12 +69,19 @@ def fenetremain():
     fenetre.mainloop()  
 
 def scene_readers():
+    labels = []
+    
     myFrame = Frame(fenetre).place(x=50, y=100)
-    for dict in liste_readers: 
-        print(dict)
-        
-
-        
+    print(liste_readers)
+    j=0
+    for i in liste_readers: 
+        if i["name"] != None:
+            print(i)
+            print(i["name"])
+            labels.append(Label(fenetre,text=i["name"]+" "+str(i["sexe"]) + " " + str(i["age"]) + " " + str(i["img_picture"]) + " " + str(i["reading_style"]) + " " + i["favorite_book"]))
+            labels[j].place(x=10,y=10+(30*j))
+            j+=1
+            
 
 
 def sceneprofile():
@@ -233,6 +243,7 @@ def delete_readers(index_readers,liste_readers):
     return liste_readers
     
 if __name__ == "__main__":
+    global liste_readers
     liste_readers = [
         {"name":"Gilbert","sexe":1,"age":3,"img_picture":4,"reading_style":6,"favorite_book":"Narnia"},
         {"name":"William","sexe":3,"age":2,"img_picture":4,"reading_style":7,"favorite_book":"Narnia"},
