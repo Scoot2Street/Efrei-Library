@@ -1,3 +1,4 @@
+from io import UnsupportedOperation
 import os
 import random
 import time
@@ -13,11 +14,65 @@ def clear():
     for widgets in fenetre.winfo_children():
       widgets.destroy()
 
+def submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username,password,sexe,age):
+    liste_like=[]
+    if var1.get() == 1:
+        liste_like.append(1)
+    if var2.get() == 1:
+        liste_like.append(2)
+    if var3.get() == 1:
+        liste_like.append(3)
+    if var4.get() == 1:
+        liste_like.append(4)
+    if var5.get() == 1:
+        liste_like.append(5)
+    if var6.get() == 1:
+        liste_like.append(6)
+    if var7.get() == 1:
+        liste_like.append(7)
+    if var8.get() == 1:
+        liste_like.append(8)
+    if var9.get() == 1:
+        liste_like.append(9)
+    if var10.get() == 1:
+        liste_like.append(10)
+    if sexe == "Homme":
+        sexe=1
+    elif sexe=="Femme":
+        sexe=2
+    elif sexe=="Non Déterminé":
+        sexe=3         
+    print(liste_like)
+    number=1
+    img_nbr = 1
+    ajouter_readers(liste_readers,number,username,age,sexe,img_nbr,liste_like,reading_style)
 
 def validatelogin():
     fichier=open("login-password.txt","r")
 
-    
+def fenetremain():    
+    fenetre.title("Library Efrei")
+    fenetre.geometry("800x500")
+    #Boutton inscription 
+    Frame1 = Frame(fenetre, borderwidth=2, relief=GROOVE)
+    Frame1.pack(side=LEFT, padx=30, pady=30)
+    Label(Frame1).pack(padx=10, pady=10)
+    label = Label(fenetre, text="Texte par défaut", bg="yellow")
+    label.pack()
+    inscription=Button(Frame1,text="S'inscrire",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
+    inscription.pack(padx=10, pady=10)
+    profile = Button(fenetre,text="Acceder aux profiles existants",command=lambda: [clear(),scene_readers()])
+    profile.pack(padx=1,pady=200)
+    fenetre.mainloop()  
+
+def scene_readers():
+    myFrame = Frame(fenetre).place(x=50, y=100)
+    for dict in liste_readers: 
+        print(dict)
+        
+
+        
+
 
 def sceneprofile():
     #Username
@@ -29,7 +84,7 @@ def sceneprofile():
     passwordLabel = Label(fenetre,text="Mot de passe").grid(row=1,column=0)
     passwordentry = Entry(fenetre,textvariable=password,show='*',width=30).grid(row=1,column=1)
     #gender
-    sexe=tkinter.StringVar()
+    sexe=StringVar()
     sexeOption = ["Homme", 
                   "Femme",
                   "Non Déterminé"]
@@ -57,8 +112,61 @@ def sceneprofile():
     w = OptionMenu(fenetre,style,*styleoption)
     w.grid(row=4,column=1)
     lectureLabel = Label(fenetre,text="style préferé").grid(row=4,column=0)
+
+#Choisir livre lues 
+    var1 = IntVar()
+    var2 = IntVar()
+    var3 = IntVar()
+    var4 = IntVar()
+    var5 = IntVar()
+    var6 = IntVar()
+    var7 = IntVar()
+    var8 = IntVar()
+    var9 = IntVar()
+    var10 = IntVar()
+    liste_like=[]
+    Long_Walk_to_Freedom = Checkbutton(fenetre,text="Long Walk to Freedom",variable=var1, onvalue=1, offvalue=0,).grid(row=6,column=1)
+    Things_I_Did_and_Things_I_Think_I_Did = Checkbutton(fenetre,text="Things I Did and Things I Think I Did",variable=var2, onvalue=1, offvalue=0).grid(row=6,column=2)
+    The_Bloody_Chamber = Checkbutton(fenetre,text="The Bloody Chamber",variable=var3, onvalue=1, offvalue=0).grid(row=6,column=3)
+    The_Memoirs_of_an_Amnesiac = Checkbutton(fenetre,text="The Memoirs of an Amnesic",variable=var4, onvalue=1, offvalue=0).grid(row=7,column=0)
+    The_Silence_of_the_Lambs = Checkbutton(fenetre,text="The Silence of the Lamb",variable=var5, onvalue=1, offvalue=0).grid(row=7,column=1)
+    The_Hunger = Checkbutton(fenetre,text="The Hunger",variable=var6, onvalue=1, offvalue=0).grid(row=7,column=2)
+    Wild_Eyes = Checkbutton(fenetre,text="Wild eyes",variable=var7, onvalue=1, offvalue=0).grid(row=7,column=3)
+    White_Teeth = Checkbutton(fenetre,text="White Teeth",variable=var8, onvalue=1, offvalue=0).grid(row=8,column=0)
+    The_Resisters = Checkbutton(fenetre,text="The Resisters",variable=var9, onvalue=1, offvalue=0).grid(row=8,column=1)
+    The_Power = Checkbutton(fenetre,text="The Power",variable=var10, onvalue=1, offvalue=0).grid(row=8,column=2)
+    livre = Label(fenetre,text="Livre lus").grid(row=6,column=0)
+    #Ajout des livres lues a liste_like
+
+
+    #Convertir reading style en int
+    reading_style=1
+    if style.get() == "sci-fi":
+        reading_style=1
+    elif style.get() == "Biography":
+        reading_style=2
+    elif style.get() == "Horror":
+        reading_style=3
+    elif style.get()== "Romance":
+        reading_style=4       
+    elif style.get() == "Fable":
+        reading_style=5
+    elif style.get()=="History":
+        reading_style=6
+    elif style.get() == "Comedy":
+        reading_style=7           
+        
     
-    
+    #Bouton retourner au hub
+    hub=Button(fenetre,text="Acceder aux hub",highlightbackground='#3E4149',command=lambda: [clear(),fenetremain()])
+    hub.grid(row=20,column=0)
+    #Convertir en str
+    #Sumbit button
+    number= 1
+    img_nbr = 3
+    #
+    Submit=Button(fenetre,text="S'inscire",highlightbackground='#3E4149',command=lambda: [clear(),submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username.get(),password.get(),sexe.get(),age.get())])
+    Submit.grid(row=10,column=1)
     
     #Ecrire et Lire dans fichier txt
     #fichier= open("login-password.txt","w")
@@ -110,7 +218,6 @@ def delete_book(nom_livre):
     
     with open("books.txt", "w") as fichier:
         fichier.write(t.replace(nom_livre,str()))
-
 def delete_readers(index_readers,liste_readers):
     with open("readers.txt","r") as fichier:
             t = fichier.read()
@@ -149,26 +256,20 @@ if __name__ == "__main__":
         {"name":"Lili","sexe":2,"age":2,"img_picture":4,"reading_style":2,"favorite_book":"Narnia"},
         {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
         ]
-        
-    fenetre= Tk()
-    fenetre.title("Library Efrei")
-    fenetre.geometry("800x500")
-    #Boutton Profile 
-    Frame1 = Frame(fenetre, borderwidth=2, relief=GROOVE)
-    Frame1.pack(side=LEFT, padx=30, pady=30)
-    Label(Frame1).pack(padx=10, pady=10)
-    label = Label(fenetre, text="Texte par défaut", bg="yellow")
-    label.pack()
-    profile=Button(Frame1,text="Acceder aux profiles",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
-    profile.pack(padx=10, pady=10)
 
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
+
+    
     # liste_readers = modifier_reader(liste_readers,1,2,"MathieuRAZR",2,2,4,[1,2,3],2)
 
+    liste_readers = delete_readers(2,liste_readers)
+    fenetre= Tk()
+    fenetremain()
 
 
-    fenetre.mainloop()
+
+
 
     # ajouter_livre("Le Hobbit")
     # modifier_livre("Le Hobbit","Narnia")
