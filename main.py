@@ -10,7 +10,7 @@ from Profile import *
 
 from tkinter import *
 from tkinter.font import names 
-
+TK_SILENCE_DEPRECATION=1
 
 def clear():
     for widgets in fenetre.winfo_children():
@@ -58,16 +58,19 @@ def validatelogin():
 def fenetremain():    
     fenetre.title("Library Efrei")
     fenetre.geometry("800x500")
-    #Boutton inscription 
-    Frame1 = Frame(fenetre, borderwidth=2, relief=GROOVE)
-    Frame1.pack(side=LEFT, padx=30, pady=30)
-    Label(Frame1).pack(padx=10, pady=10)
+   #Label
+    
     label = Label(fenetre, text="Texte par défaut", bg="yellow")
-    label.pack()
-    inscription=Button(Frame1,text="S'inscrire",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
-    inscription.pack(padx=10, pady=10)
+    label.pack(side=TOP)
+    #inscription boutton
+    inscription=Button(fenetre,text="S'inscrire",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
+    inscription.pack(side=LEFT)
+    #profile boutton
     profile = Button(fenetre,text="Acceder aux profiles existants",command=lambda: [clear(),scene_readers()])
-    profile.pack(padx=1,pady=200)
+    profile.pack(side=LEFT)
+    #add livre boutton
+    addlivre = Button(fenetre,text="Aouter un livre",command=lambda: [clear(),scenelivre()])
+    addlivre.pack(side=LEFT)
     fenetre.mainloop()  
 
 def scene_readers():
@@ -80,21 +83,60 @@ def scene_readers():
     
     j=0
     l = []
+    
     for i in liste_readers: 
         if i != None:
             labels.append(Label(fenetre,text=i["name"]+" "+str(i["sexe"]) + " " + str(i["age"]) + " " + str(i["img_picture"]) + " " + str(i["reading_style"]) + " " + i["favorite_book"]))
             labels[j].grid(row=1*j,column=0)
-            edit.append(Button(fenetre,text="Edit"))
+            
+            edit.append(Button(fenetre,text="Edit",command=lambda y=j: [a(y),clear(),sceneprofile()]))
             edit[j].grid(row=1*j,column=1)
-            delete.append(Button(fenetre,text="Delete",command= lambda:  [truc(delete[j]),scene_readers()]))
+            
+            
+            delete.append(Button(fenetre,text="Delete",command= lambda  x=j :[ delete_readers(x),scene_readers()]))
             delete[j].grid(row=1*j,column=2)
+            
             j+=1
-def truc(a):
-    print(a)
+    hub=Button(fenetre,text="Acceder aux hub",highlightbackground='#3E4149',command=lambda: [clear(),fenetremain()])
+    hub.grid(row=j+1,column=0)       
+def a(y):
+    global liste_readers
+    global username
+    global sexe
+    global age
+    global style
+    
+    username.set(liste_readers[y]["name"])
+    sexe.set(liste_readers[y]["sexe"])
+    age.set(liste_readers[y]["age"])
+    style.set(liste_readers[y]["reading_style"])
+    if style.get() == "sci-fi":
+        reading_style=1
+    elif style.get() == "Biography":
+        reading_style=2
+    elif style.get() == "Horror":
+        reading_style=3
+    elif style.get()== "Romance":
+        reading_style=4       
+    elif style.get() == "Fable":
+        reading_style=5
+    elif style.get()=="History":
+        reading_style=6
+    elif style.get() == "Comedy":
+        reading_style=7   
+    
+    
+    
 def sceneprofile():
     global liste_readers
+    global username
+    global sexe
+    global age
+    global style
+    
     #Username
-    username = StringVar() 
+    
+   
     usernameLabel = Label(fenetre,text="Pseudo").grid(row=0, column=0)
     usernameentry = Entry(fenetre, textvariable=username, width=30).grid(row=0, column=1)
     #Password
@@ -102,7 +144,7 @@ def sceneprofile():
     passwordLabel = Label(fenetre,text="Mot de passe").grid(row=1,column=0)
     passwordentry = Entry(fenetre,textvariable=password,show='*',width=30).grid(row=1,column=1)
     #gender
-    sexe=StringVar()
+    
     sexeOption = ["Homme", 
                   "Femme",
                   "Non Déterminé"]
@@ -112,7 +154,7 @@ def sceneprofile():
     sexeLabel = Label(fenetre,text="Sexe").grid(row=2,column=0)
     
     #Age
-    age = IntVar()
+    
     ageLabel = Label(fenetre,text="Age").grid(row=3,column=0)
     ageentry = Entry(fenetre,textvariable=age,width=30).grid(row=3,column=1)
     
@@ -125,8 +167,8 @@ def sceneprofile():
                   "History",
                   "Comedy"
                   ]
-    style = StringVar()
-    style.set(styleoption[0])
+    if style.get() == "":
+        style.set(styleoption[0])
     w = OptionMenu(fenetre,style,*styleoption)
     w.grid(row=4,column=1)
     lectureLabel = Label(fenetre,text="style préferé").grid(row=4,column=0)
@@ -190,7 +232,46 @@ def sceneprofile():
     #fichier.write(username)
     #fichier.write(password)
     #fichier.close()
-
+def popup(y):
+    global liste_livre
+    top = Toplevel(fenetre)
+    nouveau_nom=StringVar()
+    top.geometry("250x250")
+    top.title("Modification")
+    Label(top,text="Entrez le nouveau nom").pack(side=TOP)
+    Entry(top,textvariable=nouveau_nom).pack(side=LEFT)
+    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get(),top.destroy())]).pack(side=LEFT)
+    
+    
+def scenelivre():
+    print("test")
+    livre = StringVar()
+    add_livre = Label(fenetre,text="Entrez le nom du livre que vous souhaitez ajouter")
+    livreentry = Entry(fenetre,textvariable=livre)
+    entrer = Button(fenetre,text="Entrer",command=lambda:[ajouter_livre(livre.get()),livre.set(""),scenelivre()])
+    add_livre.grid(row=0,column=0)
+    livreentry.grid(row=1,column=0)
+    entrer.grid(row=1,column=1)
+    labels,edit,delete = [],[],[]
+    j=0
+    c=0
+    for i in range(len(liste_livre)):
+        if j ==16 or j ==32:
+            c +=3
+            j=0
+        labels.append(Label(fenetre,text=liste_livre[i]))
+        labels[i].grid(row=1*(j+2),column=c)
+            
+        edit.append(Button(fenetre,text="Edit",command=lambda y=i: [popup(y)]))
+        edit[i].grid(row=1*(j+2),column=c+1)
+            
+            
+        delete.append(Button(fenetre,text="Delete",command= lambda  x=i :[ delete_book(liste_livre[x]),scenelivre()]))
+        delete[i].grid(row=1*(j+2),column=c+2)
+        j+=1
+    
+    
+    
 def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_style):
     global liste_readers
     liste_readers.append({"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"})
@@ -204,8 +285,9 @@ def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_styl
 
     return liste_readers
 
-
 def ajouter_livre(nom_livre):
+    str(nom_livre)
+   
     fichier = open("books.txt", "r")
     for line in fichier:
         if line == nom_livre:
@@ -220,6 +302,8 @@ def ajouter_livre(nom_livre):
     fichier.close
 
 def modifier_livre(nom_livre,nom_modify):
+    nom_modify=  str(nom_modify)
+    print(nom_modify,nom_livre)
     with open("books.txt","r") as fichier:
         t = fichier.read()
     
@@ -254,6 +338,7 @@ def delete_readers(index_readers):
     
 if __name__ == "__main__":
     global liste_readers
+    global liste_livre
     liste_readers = [
         {"name":"Gilbert","sexe":1,"age":3,"img_picture":4,"reading_style":6,"favorite_book":"Narnia"},
         {"name":"William","sexe":3,"age":2,"img_picture":4,"reading_style":7,"favorite_book":"Narnia"},
@@ -264,10 +349,34 @@ if __name__ == "__main__":
         {"name":"Lili","sexe":2,"age":2,"img_picture":4,"reading_style":2,"favorite_book":"Narnia"},
         {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
         ]
-
+    liste_livre=["Débuter la programmation Java",
+    "Apprendre Python",
+    "Les Citations du Président Mao Tse-Toung",
+    "Don Quichotte de la Manche",
+    "Un conte de deux villes",
+    "Le Seigneur des Anneaux",
+    "Le Petit Prince",
+    "Harry Potter à l’école des sorciers",
+    "Dix Petits Nègres",
+    "Le rêve dans le Pavillon rouge",
+    "Le Lion, la Sorcière blanche et l’Armoire magique",
+    "Elle – She : a history of Adventure",
+    "The Da Vinci Code",
+    "Réfléchissez et devenez riche",
+    "Harry Potter et le Prince de Sang mêlé",
+    "L’Alchimiste",
+    "Harry Potter et la Chambre des Secrets",
+    "L’attrape-cœurs, The Catcher in the Rye",
+    "Narnia"]
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
     fenetre= Tk()
+    username = StringVar()
+    sexe = StringVar()
+    age = IntVar()
+    style = StringVar()
+    
+    
     fenetremain()
     # ajouter_livre("Le Hobbit")
     # modifier_livre("Le Hobbit","Narnia")
