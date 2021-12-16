@@ -231,8 +231,29 @@ def delete_readers(index_readers,liste_readers):
 
     liste_readers[index_readers] = None
     return liste_readers
+
+
+def matrice_generator(liste_readers):
+    matrice = []
+    with open('books.txt') as f:
+        b = sum(1 for _ in f)
     
+    for a in range (0,b):
+        matrice.append([])
+        for c in range (0,len(liste_readers)):
+            matrice[a].append(random.randint(0,5))
+    #0 = pas lu 5 = excellent
+    print (matrice)
+
+    return matrice
+
+
+
+
+
+
 if __name__ == "__main__":
+
     liste_readers = [
         {"name":"Gilbert","sexe":1,"age":3,"img_picture":4,"reading_style":6,"favorite_book":"Narnia"},
         {"name":"William","sexe":3,"age":2,"img_picture":4,"reading_style":7,"favorite_book":"Narnia"},
@@ -244,9 +265,9 @@ if __name__ == "__main__":
         {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
         ]
 
-
+    matrice = matrice_generator(liste_readers)
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
-    liste_readers = delete_readers(2,liste_readers)
+    # liste_readers = delete_readers(2,liste_readers)
     fenetre= Tk()
     fenetremain()
     # ajouter_livre("Le Hobbit")
