@@ -18,42 +18,79 @@ def clear():
 
 def submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username,password,sexe,age):
     global liste_readers
+    global liste_livre
+    global liste_like
+    rating=[]
+    labels=[]
+    note = []
+    rdiobutton = []
     liste_like=[]
+    exemple = {}
     if var1.get() == 1:
-        liste_like.append(1)
+        liste_like.append(0)
     if var2.get() == 1:
-        liste_like.append(2)
+        liste_like.append(1)
     if var3.get() == 1:
-        liste_like.append(3)
+        liste_like.append(2)
     if var4.get() == 1:
-        liste_like.append(4)
+        liste_like.append(3)
     if var5.get() == 1:
-        liste_like.append(5)
+        liste_like.append(4)
     if var6.get() == 1:
-        liste_like.append(6)
+        liste_like.append(5)
     if var7.get() == 1:
-        liste_like.append(7)
+        liste_like.append(6)
     if var8.get() == 1:
-        liste_like.append(8)
+        liste_like.append(7)
     if var9.get() == 1:
-        liste_like.append(9)
+        liste_like.append(8)
     if var10.get() == 1:
-        liste_like.append(10)
+        liste_like.append(9)
     if sexe == "Homme":
         sexe=1
     elif sexe=="Femme":
         sexe=2
     elif sexe=="Non Déterminé":
-        sexe=3         
+        sexe=3 
+    top = Toplevel(fenetre)
+    top.geometry("500x500")
+    top.title("Rating")    
+    for h in range(1,6):
+        note.append(Label(top,text=h))
+        note[h-1].grid(row=0,column=h)
+            
+    for i in range(len(liste_like)):
+        temp = liste_like[i]
+        check = IntVar()
+        rating.append(check)
+        Label(top,text="Evaluer les livres que vous avez lues : ").grid(row=0,column=0)
+        
+        for j in range(5):
+            rdiobutton.append(Radiobutton(top,variable=rating[i],value=j+1))
+            print(j)
+            rdiobutton[j+(i*5)].grid(row=i+1,column=j+1)
+            
+        
+        labels.append(Label(top,text=liste_livre[temp]))
+        labels[i].grid(row=(i+1),column=0)
+        exemple[liste_livre[i]] = rating[i].get()
+    
+    
+    Submit=Button(top,text="Confirmer",highlightbackground='#3E4149',command=lambda: [clear(),notation(rating),fenetremain()])
+    Submit.grid(row=10,column=0)
+        
     print(liste_like)
     number=1
     img_nbr = 1
     ajouter_readers(number,username,age,sexe,img_nbr,liste_like,reading_style)
 
+def notation(rating):
+    global liste_like
+    dict_note = {}
+    for i in range(len(liste_like)):
+        dict_note[liste_like[i]] = rating[i].get()
+        print(dict_note)
 
-
-def validatelogin():
-    fichier=open("login-password.txt","r")
 
 def fenetremain():    
     fenetre.title("Library Efrei")
