@@ -3,7 +3,7 @@ import os
 import random
 import time
 import tkinter
-
+from math import *
 from Profile import *
 
 from tkinter import *
@@ -241,16 +241,82 @@ def matrice_generator(liste_readers):
     for a in range (0,b):
         matrice.append([])
         for c in range (0,len(liste_readers)):
-            matrice[a].append(random.randint(0,5))
-    #0 = pas lu 5 = excellent
-    print (matrice)
+            matrice[a].append(0)
+
+    for lecteur in range  (0,len(liste_readers)):
+        cpt = 0
+        for livre_lu in liste_readers[lecteur]["booksread"]:
+            # print("lecteur",lecteur,"livre_lu",livre_lu,"coordonnées",int(livre_lu)-1," + ",lecteur,"note ajoutée",liste_readers[lecteur]["note"][cpt],"cpt",cpt)
+
+            matrice[int(livre_lu)-1][lecteur] = int(liste_readers[lecteur]["note"][cpt])
+
+            cpt += 1
+
+ 
+    # #0 = pas lu 5 = excellent
+    # print (matrice)
+
 
     return matrice
 
+def note(liste_readers):
+    with open('booksread.txt') as fichier:
+        cpt = 0
+        for line in fichier:
+            c = line.split("%")
+        
+            c[-1] = c[-1][0:-1]
+            # print(c[1])
+            # print (cpt)
+           
+            liste_readers[cpt]["note"] = c[1].split(",")
+            
+            b = c[0].split()
+            b = b[0]
+            b = b.split(",")
+            liste_readers[cpt]["booksread"] = b[1:]
+    
+            cpt += 1
+            
+            
+    return liste_readers
+    
+def similarity_matrice(liste_readers,matrice):
+    matrice_sim=[]
+    for a in range (0,len(liste_readers)-1):
+        matrice_sim.append([])
+        for b in range (0,len(liste_readers)-1):
+            matrice_sim[a].append(0)
+    
+    print(liste_readers[0]["booksread"],"note :",liste_readers[0]["note"])
+    print(liste_readers[2]["booksread"],"note :",liste_readers[2]["note"])
+    
 
+        
+    # a1xb1 +a2 * b2 + a3*b3 jusqu à  n (nombre de livres)
+    # divisé par racine de (a1²) + racine de (b1²) +....jusqu à n nombre de livres
+    return matrice_sim
 
+def similarity_btw_readers(liste_readers,matrice,matrice_sim):
 
+    for b in range (0,len(matrice)):
+        print ("=",matrice[b])
+    
+    for b in range (0,len(matrice_sim)):
+        for c in range (0,len(matrice_sim[b])):
+            # #lecteur 1 et 3
+            val1,val2,val3 = 0,0,0
+            for a in range (0,len(matrice)):
+                val1 += matrice[a][b]*matrice[a][c]
+                val2 += matrice[a][b]**2
+                val3 += matrice[a][c]**2
+            val4 = val1/(sqrt(val2)*sqrt(val3))
+            val4 = round(val4,2)
+            matrice_sim[b][c] = val4
 
+    # for b in range (0,len(matrice_sim)):
+    #     print (":",matrice_sim[b])
+    return matrice_sim
 
 if __name__ == "__main__":
 
@@ -265,7 +331,10 @@ if __name__ == "__main__":
         {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
         ]
 
+    liste_readers = note(liste_readers)
     matrice = matrice_generator(liste_readers)
+    matrice_sim = similarity_matrice(liste_readers,matrice)
+    matrice_sim  = similarity_btw_readers(liste_readers,matrice,matrice_sim)
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
     # liste_readers = delete_readers(2,liste_readers)
     fenetre= Tk()
