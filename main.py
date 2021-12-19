@@ -138,7 +138,8 @@ def scene_readers():
             
             j+=1
     hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()])
-    hub.grid(row=j+1,column=0)       
+    hub.grid(row=j+1,column=0)   
+
 def a(y):
     global liste_readers
     global username
@@ -164,9 +165,7 @@ def a(y):
         reading_style=6
     elif style.get() == "Comedy":
         reading_style=7   
-    
-    
-    
+      
 def sceneprofile():
     global liste_readers
     global liste_livre
@@ -260,6 +259,7 @@ def sceneprofile():
     #
     Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var,reading_style,username.get(),password.get(),sexe.get(),age.get())])
     Submit.grid(row=10,column=1)
+
 def popup(y):
     global liste_livre
     top = Toplevel(fenetre)
@@ -269,8 +269,7 @@ def popup(y):
     Label(top,text="Entrez le nouveau nom").pack(side=TOP)
     Entry(top,textvariable=nouveau_nom).pack(side=LEFT)
     Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get()),top.destroy(),scenelivre()]).pack(side=LEFT)
-    
-    
+      
 def scenelivre():
     global liste_livre
     liste_livre = initialized_liste_livre()
@@ -320,9 +319,9 @@ def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_n
     for a in liste_like:
         fichier2.write("," + str(a))
     fichier2.write("%")
-    for a in liste_note:
+    for a in range (0,len(liste_note)):
         fichier2.write(str(a))
-        if a != liste_note[-1]:
+        if liste_note.index(liste_note[a]) != liste_note.index(liste_note[-1]):
             fichier2.write(",")
 
     print("Ce lecteur a été ajouté")
@@ -411,6 +410,7 @@ def matrice_generator(liste_readers):
         cpt = 0
         for livre_lu in liste_readers[lecteur]["booksread"]:
             # print("lecteur",lecteur,"livre_lu",livre_lu,"coordonnées",int(livre_lu)-1," + ",lecteur,"note ajoutée",liste_readers[lecteur]["note"][cpt],"cpt",cpt)
+
             matrice[int(livre_lu)-1][lecteur] = int(liste_readers[lecteur]["note"][cpt])
 
             cpt += 1
@@ -423,14 +423,15 @@ def matrice_generator(liste_readers):
 
 def note(liste_readers):
     with open('booksread.txt') as fichier:
+        a = sum(1 for _ in fichier)
+    with open('booksread.txt') as fichier:
         cpt = 0
+        cpt2 = 0
         for line in fichier:
             c = line.split("%")
-        
-            c[-1] = c[-1][0:-1]
-            # print(c[1])
-            # print (cpt)
-
+            if cpt2 < a-1:
+                c[-1] = c[-1][0:-1]
+ 
             liste_readers[cpt]["note"] = c[1].split(",")
             
             b = c[0].split()
@@ -439,6 +440,7 @@ def note(liste_readers):
             liste_readers[cpt]["booksread"] = b[1:]
     
             cpt += 1
+            cpt2 += 1
             if cpt == len(liste_readers):
                 break
             
@@ -536,7 +538,6 @@ def initialized_liste_readers():
     return liste_readers
     
 
-
     
 if __name__ == "__main__":
     global liste_readers
@@ -563,7 +564,6 @@ if __name__ == "__main__":
     liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,8) #livre à recommandé pour lecteur 9 d'index 8 dans liste_readers
     print("le livre à lire est le livre",livre_recommandation)
 
-    delete_readers(4)
     # for a in range(0,len(liste_readers)):
     #     print(liste_readers[a])
     # liste_readers = ajouter_readers( 3, "Mathieu", 18, 1, 3, [1,3,4],1 ,[5,4,2])
