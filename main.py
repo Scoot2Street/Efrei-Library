@@ -29,7 +29,6 @@ def submit(var,reading_style,username,password,sexe,age):
     rdiobutton = []
     liste_like=[]
     exemple = {}
-    print(var)
     for i in range(len(var)):           #for all of the books existing, if 
         if var[i].get()==1:             #the box was checked, add the following 
             liste_like.append(i)        #number i in liste_like
@@ -84,7 +83,7 @@ def notation(username,age,sexe,img_nbr,liste_like,reading_style,rating):
     liste_note = []
     for i in range(len(rating)):
         liste_note.append(rating[i].get())  
-    ajouter_readers(username,age,sexe,img_nbr,liste_like,reading_style,liste_note)
+    add_readers(username,age,sexe,img_nbr,liste_like,reading_style,liste_note)
 
 #The hub/main window
 def fenetremain():    
@@ -132,7 +131,7 @@ def scenerecommandation():
 def recom_button(pseudo):
     pseudo1=StringVar()
     pseudo1.set(pseudo.get())
-    a,b = personne_existe(pseudo1.get()) 
+    a,b = people_exist(pseudo1.get()) 
     
     if b == True :
         pseudo1.set(recommandation(a))                          #Checking if the pseudo exist
@@ -183,7 +182,6 @@ def convert(y):
     age.set(liste_readers[y]["age"])
     style.set(liste_readers[y]["reading_style"])
      
-
 #The window/scene of the inscription form
 def sceneprofile():
     
@@ -271,7 +269,7 @@ def popup(y):
     top.title("Modification")
     Label(top,text="Entrez le nouveau nom").pack(side=TOP)
     Entry(top,textvariable=nouveau_nom).pack(side=LEFT)
-    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get()),top.destroy(),scenebook()]).pack(side=LEFT)
+    Button(top,text="Confirmer",command=lambda:[modify_book(liste_livre[y],nouveau_nom.get()),top.destroy(),scenebook()]).pack(side=LEFT)
       
 #The window/scene where all of the books are displayed
 def scenebook():
@@ -280,7 +278,7 @@ def scenebook():
     livre = StringVar()
     add_livre = Label(fenetre,text="Entrez le nom du livre que vous souhaitez ajouter")
     livreentry = Entry(fenetre,textvariable=livre)
-    entrer = Button(fenetre,text="Entrer",command=lambda:[ajouter_livre(livre.get()),livre.set(""),scenebook()])
+    entrer = Button(fenetre,text="Entrer",command=lambda:[add_book(livre.get()),livre.set(""),scenebook()])
     add_livre.grid(row=0,column=0)
     livreentry.grid(row=1,column=0)
     entrer.grid(row=1,column=1)
@@ -309,7 +307,6 @@ def scenebook():
         else:
             i+=1
 
-
 #Deleting the widget of a deleted book
 def suppr(x,delete,edit):
     delete[x].grid_forget()     #Deleting the delete button of a deleted book
@@ -319,7 +316,7 @@ def suppr(x,delete,edit):
     
 #function to add a reader with his name,age,genre, liste_like (according to books who has been read by the reader), reading_style and the liste of all note with the same index as liste_like
 # the returned result is the updated liste_reader,readers.txt and booksread.txt   
-def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_note):
+def add_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_note):
 
     global liste_readers
     liste_readers.append({"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"})
@@ -341,7 +338,7 @@ def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_n
 
 #function to add a book, checking if the book already exist or not
 #output : the updated liste_livre
-def ajouter_livre(nom_livre):
+def add_book(nom_livre):
     global liste_livre
     str(nom_livre)
    
@@ -365,7 +362,7 @@ def ajouter_livre(nom_livre):
 
 #function to modify the name of the book by replacing his line in the books.txt
 #output : the updated books.txt
-def modifier_livre(nom_livre,nom_modify):
+def modify_book(nom_livre,nom_modify):
     nom_modify=  str(nom_modify)
     with open("books.txt","r") as fichier:
         t = fichier.read()
@@ -497,7 +494,7 @@ def similarity_btw_readers(liste_readers,matrice,matrice_sim):
 
 #function to modify a specific profile of reader to change information by something else in the liste_readers as well as in the readers.txt
 #output : the updated readers.txt and the liste_readers
-def modifier_reader(liste_readers,index,name,age,genre,img_nbr,liste_like,reading_style):
+def modify_reader(liste_readers,index,name,age,genre,img_nbr,liste_like,reading_style):
     with open("readers.txt","r") as fichier:
         t = fichier.read()
 
@@ -511,7 +508,7 @@ def modifier_reader(liste_readers,index,name,age,genre,img_nbr,liste_like,readin
 
 #the global function who call another function to call from the start of the creation of the matrice to the final recommandation of a book just by specify his index
 #output : the recommanded book for a specific readers (index_lecteur)
-def recommandation(liste_readers,index_lecteur):
+def recommandation(index_lecteur):
 
     
     global liste_readers
@@ -539,7 +536,6 @@ def recommandation(liste_readers,index_lecteur):
     livre_recommandation = liste_reco[note_max]
     return (liste_livre[int(livre_recommandation)])
 
-
 #function to create a liste of books by taking the information stored in the books.txt
 #output : the newly created liste_livre
 def initialized_liste_livre():
@@ -564,11 +560,9 @@ def initialized_liste_readers():
         
     return liste_readers
     
-
 #function to check if a reader is in the database
 #the index of the reader and a True or False condition
-
-def personne_existe(nom):
+def people_exist(nom):
     global liste_readers
     for a in range (0,len(liste_readers)):
         if liste_readers[a] != None:
