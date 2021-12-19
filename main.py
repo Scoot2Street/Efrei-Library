@@ -219,16 +219,17 @@ def sceneprofile():
     liste_like=[]
     check = []
     j=0
-    k=4
+    k=5
     for i in range(len(liste_livre)):
-        
-        var.append(IntVar())
-        check.append(Checkbutton(fenetre,text=liste_livre[i],variable=var[i],offvalue=0,onvalue=1))
-        check[i].grid(row=(k),column=j)
-        j+=1
-        if j > 2 :
-            j=0
-            k +=1
+        if liste_livre[i]!="":
+            var.append(IntVar())
+            check.append(Checkbutton(fenetre,text=liste_livre[i],variable=var[i],offvalue=0,onvalue=1))
+            check[i].grid(row=(k),column=j)
+            j+=1
+            if j > 2 :
+                j=0
+                k +=1
+                
     #Ajout des livres lues a liste_like
 
 
@@ -252,14 +253,14 @@ def sceneprofile():
     
     #Bouton retourner au hub
     hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()])
-    hub.grid(row=20,column=0)
+    hub.grid(row=200,column=0)
     #Convertir en str
     #Sumbit button
     number= 1
     img_nbr = 3
     #
     Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var,reading_style,username.get(),password.get(),sexe.get(),age.get())])
-    Submit.grid(row=10,column=1)
+    Submit.grid(row=100,column=1)
 def popup(y):
     global liste_livre
     top = Toplevel(fenetre)
