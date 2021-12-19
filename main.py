@@ -6,6 +6,7 @@ import random
 import time
 import tkinter
 from math import *
+from tkinter import font
 from Profile import *
 
 from tkinter import *
@@ -95,20 +96,43 @@ def notation(rating):
 def fenetremain():    
     fenetre.title("Library Efrei")
     fenetre.geometry("800x500")
-   #Label
     
-    label = Label(fenetre, text="Texte par défaut", bg="yellow")
+    
+    
+    
+    #Label
+    
+    label = Label(fenetre, text="Bienvenue sur EfreiLibrary")
+    label.config(font=("Arial", 16))
     label.pack(side=TOP)
+    
+    #gestion de l'image
+    logo = PhotoImage(file="t.gif")
+    can = Canvas(fenetre,width="400",height="400")
+    can.create_image(200,200,image=logo)
+    can.image = logo
+    can.pack()
     #inscription boutton
-    inscription=Button(fenetre,text="S'inscrire",highlightbackground='#3E4149',command=lambda: [clear(),sceneprofile()])
-    inscription.pack(side=LEFT)
+    
+    inscription=Button(fenetre,text="S'inscrire",command=lambda: [clear(),sceneprofile()])
+    inscription.pack(side=LEFT,expand=YES)
     #profile boutton
     profile = Button(fenetre,text="Acceder aux profiles existants",command=lambda: [clear(),scene_readers()])
-    profile.pack(side=LEFT)
+    profile.pack(side=LEFT,expand=YES)
     #add livre boutton
-    addlivre = Button(fenetre,text="Aouter un livre",command=lambda: [clear(),scenelivre()])
-    addlivre.pack(side=LEFT)
+    addlivre = Button(fenetre,text="Ajouter un livre",command=lambda: [clear(),scenelivre()])
+    addlivre.pack(side=LEFT,expand=YES)
+    #Recommandation boutton
+    recommandation = Button(fenetre,text="Acceder aux recommandations",command=lambda: [clear(),scenerecommandation()])
+    recommandation.pack(side=LEFT,expand=YES)
     fenetre.mainloop()  
+
+def scenerecommandation():
+    pseudo = StringVar()
+    Label(fenetre,text="Entrez votre pseudo").grid(row=0,column=0)
+    Entry(fenetre,textvariable=pseudo).grid(row=0,column=1)
+    Button(fenetre,text="Valider",command=lambda:[]).grid(row=0,column=2)
+    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=1,column=0)
 
 def scene_readers():
     global liste_readers
@@ -134,7 +158,7 @@ def scene_readers():
             delete[j].grid(row=1*j,column=2)
             
             j+=1
-    hub=Button(fenetre,text="Acceder aux hub",highlightbackground='#3E4149',command=lambda: [clear(),fenetremain()])
+    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()])
     hub.grid(row=j+1,column=0)       
 def a(y):
     global liste_readers
@@ -210,7 +234,7 @@ def sceneprofile():
     w.grid(row=4,column=1)
     lectureLabel = Label(fenetre,text="style préferé").grid(row=4,column=0)
 
-#Choisir livre lues 
+    #Choisir livre lues 
     var1 = IntVar()
     var2 = IntVar()
     var3 = IntVar()
@@ -255,14 +279,14 @@ def sceneprofile():
         
     
     #Bouton retourner au hub
-    hub=Button(fenetre,text="Acceder aux hub",highlightbackground='#3E4149',command=lambda: [clear(),fenetremain()])
+    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()])
     hub.grid(row=20,column=0)
     #Convertir en str
     #Sumbit button
     number= 1
     img_nbr = 3
     #
-    Submit=Button(fenetre,text="S'inscire",highlightbackground='#3E4149',command=lambda: [clear(),submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username.get(),password.get(),sexe.get(),age.get())])
+    Submit=Button(fenetre,text="S'inscire",command=lambda: [clear(),submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username.get(),password.get(),sexe.get(),age.get())])
     Submit.grid(row=10,column=1)
     
     #Ecrire et Lire dans fichier txt
@@ -307,6 +331,7 @@ def scenelivre():
         delete.append(Button(fenetre,text="Delete",command= lambda  x=i :[ delete_book(liste_livre[x]),scenelivre()]))
         delete[i].grid(row=1*(j+2),column=c+2)
         j+=1
+    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=1,column=3)
     
     
     
@@ -402,7 +427,7 @@ def matrice_generator(liste_readers):
 
     return matrice
 
-def note(liste_readers):
+#def note(liste_readers):
     with open('booksread.txt') as fichier:
         cpt = 0
         for line in fichier:
@@ -510,10 +535,10 @@ if __name__ == "__main__":
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
 
-    liste_readers = note(liste_readers)
-    matrice = matrice_generator(liste_readers)
-    matrice_sim = similarity_matrice(liste_readers,matrice)
-    matrice_sim  = similarity_btw_readers(liste_readers,matrice,matrice_sim)
+    #liste_readers = note(liste_readers)
+    #matrice = matrice_generator(liste_readers)
+    #matrice_sim = similarity_matrice(liste_readers,matrice)
+    #matrice_sim  = similarity_btw_readers(liste_readers,matrice,matrice_sim)
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
     # liste_readers = delete_readers(2,liste_readers)
 
