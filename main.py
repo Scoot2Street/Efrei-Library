@@ -167,20 +167,17 @@ def a(y):
     sexe.set(liste_readers[y]["sexe"])
     age.set(liste_readers[y]["age"])
     style.set(liste_readers[y]["reading_style"])
-    if style.get() == "sci-fi":
-        reading_style=1
-    elif style.get() == "Biography":
-        reading_style=2
-    elif style.get() == "Horror":
-        reading_style=3
-    elif style.get()== "Romance":
-        reading_style=4       
-    elif style.get() == "Fable":
-        reading_style=5
-    elif style.get()=="History":
-        reading_style=6
-    elif style.get() == "Comedy":
-        reading_style=7   
+    styleoption= ["sci-fi",
+                  "Biography",
+                  "Horror",
+                  "Romance",
+                  "Fable",
+                  "History",
+                  "Comedy"
+                  ]
+    for i in range(len(styleoption)):
+        if style.get() == styleoption[i]:
+            style.set(i)
       
 def sceneprofile():
     global liste_readers
