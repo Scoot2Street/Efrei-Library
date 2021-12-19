@@ -537,36 +537,25 @@ def initialized_liste_readers():
         
     return liste_readers
     
+def personne_existe(liste_readers,nom):
+    for a in range (0,len(liste_readers)):
+        if liste_readers[a] != None:
+            if liste_readers[a]["name"] == nom:
+                return a,True
+    return a,False
 
-    
+
+
 if __name__ == "__main__":
     global liste_readers
     global liste_livre
 
-    # liste_readers = [
-    #     {"name":"Gilbert","sexe":1,"age":3,"img_picture":4,"reading_style":6,"favorite_book":"Narnia"},
-    #     {"name":"William","sexe":3,"age":3,"img_picture":4,"reading_style":7,"favorite_book":"Narnia"},
-    #     {"name":"AlienRoXoR17","sexe":2,"age":1,"img_picture":4,"reading_style":3,"favorite_book":"Narnia"},
-    #     {"name":"anonyme","sexe":3,"age":3,"img_picture":4,"reading_style":2,"favorite_book":"Narnia"},
-    #     {"name":"Lecteur_assidu","sexe":1,"age":1,"img_picture":4,"reading_style":3,"favorite_book":"Narnia"},
-    #     {"name":"haripoteur","sexe":3,"age":2,"img_picture":4,"reading_style":5,"favorite_book":"Narnia"},
-    #     {"name":"Lili","sexe":2,"age":2,"img_picture":4,"reading_style":2,"favorite_book":"Narnia"},
-    #     {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
-    #     ]
-
     liste_readers = initialized_liste_readers()
     liste_livre = initialized_liste_livre()
-
-
-
-
-    
     liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,8) #livre à recommandé pour lecteur 9 d'index 8 dans liste_readers
     print("le livre à lire est le livre",livre_recommandation)
 
-    # for a in range(0,len(liste_readers)):
-    #     print(liste_readers[a])
-    # liste_readers = ajouter_readers( 3, "Mathieu", 18, 1, 3, [1,3,4],1 ,[5,4,2])
+    a,b = personne_existe(liste_readers,"Lecteur_assidu")
     fenetre= Tk()
     username = StringVar()
     sexe = StringVar()
@@ -575,10 +564,3 @@ if __name__ == "__main__":
     
     
     fenetremain()
-
-
-
-
-
-    # ajouter_livre("Le Hobbit")
-    # modifier_livre("Le Hobbit","Narnia")
