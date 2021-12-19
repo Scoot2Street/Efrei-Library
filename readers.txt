@@ -5,5 +5,5 @@ anonyme,3,3,2
 Lecteur_assidu,1,1,3
 haripoteur,3,2,5
 Lili,2,2,2
-ArchiBald_fx,1,3,4
-Mat,2,1,2
+ArchiBald_fx TES,1,34,4
+bouzi,1,1,sci-fi

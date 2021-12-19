@@ -9,3 +9,5 @@ ArchiBald_fx,16%1
 Mat,2,3%1,2
 Mathieu,1,4,7,10%0,1,2,3
 
+
+bouzi,7,13%0,1
