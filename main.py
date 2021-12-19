@@ -1,9 +1,6 @@
 
 #Program made by Julien Le Ber and Mathieu Roche (Aladdi group)
 
-
-
-from io import UnsupportedOperation
 import os
 import random
 import time
