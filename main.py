@@ -20,6 +20,7 @@ def clear():
 
 #Submit all of the info entered in the inscription form
 def submit(var,reading_style,username,password,sexe,age):
+    global index_readers
     global liste_readers
     global liste_livre
     global liste_like
@@ -75,9 +76,12 @@ def submit(var,reading_style,username,password,sexe,age):
         exemple[liste_livre[i]] = rating[i].get()
     
     img_nbr = 1
-    Submit=Button(top,text="Confirmer",command=lambda: [clear(),notation(username,age,sexe,img_nbr,liste_like,reading_style,rating),fenetremain()])
-    Submit.grid(row=10,column=0)
-
+    if index_readers == 0:
+        Submit=Button(top,text="Confirmer",command=lambda: [clear(),notation(username,age,sexe,img_nbr,liste_like,reading_style,rating),fenetremain()])
+        Submit.grid(row=10,column=0)
+    else :
+        Submit=Button(top,text="Faire les changements",command=lambda: [clear(),modify_reader(index_readers,username,age,sexe,img_nbr,liste_like,reading_style),fenetremain()])
+        Submit.grid(row=10,column=0)
 #Putting in a list all of the note of a user
 def notation(username,age,sexe,img_nbr,liste_like,reading_style,rating):
     liste_note = []
@@ -87,6 +91,8 @@ def notation(username,age,sexe,img_nbr,liste_like,reading_style,rating):
 
 #The hub/main window
 def fenetremain():    
+    global index_readers
+    index_readers=0
     fenetre.title("Library Efrei")
     fenetre.geometry("800x500")         #The option of the window
     
@@ -157,7 +163,7 @@ def scene_readers():
             labels.append(Label(fenetre,text=i["name"]+" "+str(i["sexe"]) + " " + str(i["age"]) + " " + str(i["img_picture"]) + " " + str(i["reading_style"]) + " " + i["favorite_book"]))  #Displaying all of the user's info
             labels[j].grid(row=1*j,column=0)
             
-            edit.append(Button(fenetre,text="Edit",command=lambda y=j: [convert(y),clear(),sceneprofile()]))                                                                                #Displaying an edit button to change th user's info
+            edit.append(Button(fenetre,text="Edit",command=lambda y=j: [convert(y),clear()]))                                                                                #Displaying an edit button to change th user's info
             edit[j].grid(row=1*j,column=1)
             
             
@@ -170,21 +176,21 @@ def scene_readers():
 
 #Converting all of the Var into python var and checking the favorite style of the user
 def convert(y):
-    
+    global index_readers
     global liste_readers
     global username
     global sexe
     global age
     global style
-    
+    index_readers = y
     username.set(liste_readers[y]["name"])          #Converting username,sexe and age into 
     sexe.set(liste_readers[y]["sexe"])              #the old user info
     age.set(liste_readers[y]["age"])
     style.set(liste_readers[y]["reading_style"])
-     
+    sceneprofile()
 #The window/scene of the inscription form
 def sceneprofile():
-    
+    global index_readers
     global liste_readers
     global liste_livre
     global username
@@ -233,6 +239,7 @@ def sceneprofile():
 
     #Choisir livre lues 
     var = []
+    liste_livre = initialized_liste_livre()
     liste_like=[]
     check = []
     j=0
@@ -259,7 +266,7 @@ def sceneprofile():
     Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var,style,username.get(),password.get(),sexe.get(),age.get())])
 
     Submit.grid(row=100,column=1)
-
+    
 #The popup to modify a book's name
 def popup(y):
     global liste_livre
@@ -494,7 +501,8 @@ def similarity_btw_readers(liste_readers,matrice,matrice_sim):
 
 #function to modify a specific profile of reader to change information by something else in the liste_readers as well as in the readers.txt
 #output : the updated readers.txt and the liste_readers
-def modify_reader(liste_readers,index,name,age,genre,img_nbr,liste_like,reading_style):
+def modify_reader(index,name,age,genre,img_nbr,liste_like,reading_style):
+    global liste_readers
     with open("readers.txt","r") as fichier:
         t = fichier.read()
 
