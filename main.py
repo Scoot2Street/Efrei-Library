@@ -411,7 +411,7 @@ def note(liste_readers):
             c[-1] = c[-1][0:-1]
             # print(c[1])
             # print (cpt)
-           
+
             liste_readers[cpt]["note"] = c[1].split(",")
             
             b = c[0].split()
@@ -420,7 +420,8 @@ def note(liste_readers):
             liste_readers[cpt]["booksread"] = b[1:]
     
             cpt += 1
-            
+            if cpt == len(liste_readers):
+                break
             
     return liste_readers
     
@@ -457,8 +458,8 @@ def similarity_btw_readers(liste_readers,matrice,matrice_sim):
             val4 = round(val4,2)
             matrice_sim[b][c] = val4
 
-    # for b in range (0,len(matrice_sim)):
-    #     print (":",matrice_sim[b])
+    for b in range (0,len(matrice_sim)):
+        print (":",matrice_sim[b])
     return matrice_sim
 
 def modifier_reader(liste_readers,index,number,name,age,genre,img_nbr,liste_like,reading_style):
