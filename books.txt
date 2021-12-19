@@ -3,7 +3,7 @@ Apprendre python
 Les Citations du Président Mao Tse-Toung
 Don Quichotte de la Manche
 Un conte de deux villes
-Le Seigneur des AAladdineaux
+Le Seigneur des Aeaux
 Le Petit Prince
 Harry Potter à l’école des sorciers
 Dix Petits Nègres
@@ -16,4 +16,5 @@ Harry Potter et le Prince de Sang mêlé
 L’Alchimiste
 Harry Potter et la Chambre des Secrets
 L’attrape-cœurs, The Catcher in the Rye
-Aladdinn
+
+a
