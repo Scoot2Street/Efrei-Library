@@ -109,8 +109,24 @@ def scenerecommandation():
     pseudo = StringVar()
     Label(fenetre,text="Entrez votre pseudo").grid(row=0,column=0)
     Entry(fenetre,textvariable=pseudo).grid(row=0,column=1)
-    Button(fenetre,text="Valider",command=lambda:[]).grid(row=0,column=2)
+    Button(fenetre,text="Valider",command=lambda:[recom_button(pseudo)]).grid(row=0,column=2)
     hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=1,column=0)
+
+def recom_button(pseudo):
+    pseudo1=StringVar()
+    pseudo1.set(pseudo.get())
+    a,b = personne_existe(pseudo1.get())
+    print(pseudo1.get(),a,b)
+    
+    if b == True :
+        pseudo1.set(recommandation(a))
+        clear()
+        scenerecommandation()
+    if b == False :
+        pseudo1.set("Ce lecteur n'existe pas")
+        clear()
+        scenerecommandation()
+    Label(fenetre,textvariable=pseudo1).grid(row=1,column=2)
 
 def scene_readers():
     global liste_readers
@@ -492,7 +508,9 @@ def modifier_reader(liste_readers,index,name,age,genre,img_nbr,liste_like,readin
 
     return liste_readers
 
-def recommandation(liste_readers,index_lecteur):
+def recommandation(index_lecteur):
+    
+    global liste_readers
     liste_readers = note(liste_readers)
     matrice = matrice_generator(liste_readers)
     matrice_sim = similarity_matrice(liste_readers,matrice)
@@ -516,7 +534,7 @@ def recommandation(liste_readers,index_lecteur):
 
     livre_recommandation = liste_reco[note_max]
 
-    return liste_readers,matrice,matrice_sim,livre_recommandation
+    return livre_recommandation
 
 def initialized_liste_livre():
     global liste_livre
@@ -538,7 +556,8 @@ def initialized_liste_readers():
         
     return liste_readers
     
-def personne_existe(liste_readers,nom):
+def personne_existe(nom):
+    global liste_readers
     for a in range (0,len(liste_readers)):
         if liste_readers[a] != None:
             if liste_readers[a]["name"] == nom:
@@ -553,10 +572,7 @@ if __name__ == "__main__":
 
     liste_readers = initialized_liste_readers()
     liste_livre = initialized_liste_livre()
-    liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,8) #livre à recommandé pour lecteur 9 d'index 8 dans liste_readers
-    print("le livre à lire est le livre",livre_recommandation)
-
-    a,b = personne_existe(liste_readers,"Lecteur_assidu")
+    
     fenetre= Tk()
     username = StringVar()
     sexe = StringVar()
