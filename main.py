@@ -17,7 +17,7 @@ def clear():
     for widgets in fenetre.winfo_children():
       widgets.destroy()
 
-def submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username,password,sexe,age):
+def submit(var,reading_style,username,password,sexe,age):
     global liste_readers
     global liste_livre
     global liste_like
@@ -27,26 +27,11 @@ def submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,user
     rdiobutton = []
     liste_like=[]
     exemple = {}
-    if var1.get() == 1:
-        liste_like.append(0)
-    if var2.get() == 1:
-        liste_like.append(1)
-    if var3.get() == 1:
-        liste_like.append(2)
-    if var4.get() == 1:
-        liste_like.append(3)
-    if var5.get() == 1:
-        liste_like.append(4)
-    if var6.get() == 1:
-        liste_like.append(5)
-    if var7.get() == 1:
-        liste_like.append(6)
-    if var8.get() == 1:
-        liste_like.append(7)
-    if var9.get() == 1:
-        liste_like.append(8)
-    if var10.get() == 1:
-        liste_like.append(9)
+    print(var)
+    for i in range(len(var)):
+        if var[i].get()==1:
+            liste_like.append(i)
+            print(liste_like)
     if sexe == "Homme":
         sexe=1
     elif sexe=="Femme":
@@ -76,22 +61,16 @@ def submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,user
         labels[i].grid(row=(i+1),column=0)
         exemple[liste_livre[i]] = rating[i].get()
     
-    
-    Submit=Button(top,text="Confirmer",highlightbackground='#3E4149',command=lambda: [clear(),notation(rating),fenetremain()])
-    Submit.grid(row=10,column=0)
-        
-    print(liste_like)
-    number=1
     img_nbr = 1
-    ajouter_readers(username,age,sexe,img_nbr,liste_like,reading_style)
+    Submit=Button(top,text="Confirmer",highlightbackground='#3E4149',command=lambda: [clear(),notation(username,age,sexe,img_nbr,liste_like,reading_style,rating),fenetremain()])
+    Submit.grid(row=10,column=0)
 
-def notation(rating):
-    global liste_like
-    dict_note = {}
-    for i in range(len(liste_like)):
-        dict_note[liste_like[i]] = rating[i].get()
-        print(dict_note)
-
+def notation(username,age,sexe,img_nbr,liste_like,reading_style,rating):
+    liste_note = []
+    for i in range(len(rating)):
+        liste_note.append(rating[i].get())
+    
+    ajouter_readers(username,age,sexe,img_nbr,liste_like,reading_style,liste_note)
 
 def fenetremain():    
     fenetre.title("Library Efrei")
@@ -190,6 +169,7 @@ def a(y):
     
 def sceneprofile():
     global liste_readers
+    global liste_livre
     global username
     global sexe
     global age
@@ -235,28 +215,20 @@ def sceneprofile():
     lectureLabel = Label(fenetre,text="style préferé").grid(row=4,column=0)
 
     #Choisir livre lues 
-    var1 = IntVar()
-    var2 = IntVar()
-    var3 = IntVar()
-    var4 = IntVar()
-    var5 = IntVar()
-    var6 = IntVar()
-    var7 = IntVar()
-    var8 = IntVar()
-    var9 = IntVar()
-    var10 = IntVar()
+    var = []
     liste_like=[]
-    Long_Walk_to_Freedom = Checkbutton(fenetre,text="Long Walk to Freedom",variable=var1, onvalue=1, offvalue=0,).grid(row=6,column=1)
-    Things_I_Did_and_Things_I_Think_I_Did = Checkbutton(fenetre,text="Things I Did and Things I Think I Did",variable=var2, onvalue=1, offvalue=0).grid(row=6,column=2)
-    The_Bloody_Chamber = Checkbutton(fenetre,text="The Bloody Chamber",variable=var3, onvalue=1, offvalue=0).grid(row=6,column=3)
-    The_Memoirs_of_an_Amnesiac = Checkbutton(fenetre,text="The Memoirs of an Amnesic",variable=var4, onvalue=1, offvalue=0).grid(row=7,column=0)
-    The_Silence_of_the_Lambs = Checkbutton(fenetre,text="The Silence of the Lamb",variable=var5, onvalue=1, offvalue=0).grid(row=7,column=1)
-    The_Hunger = Checkbutton(fenetre,text="The Hunger",variable=var6, onvalue=1, offvalue=0).grid(row=7,column=2)
-    Wild_Eyes = Checkbutton(fenetre,text="Wild eyes",variable=var7, onvalue=1, offvalue=0).grid(row=7,column=3)
-    White_Teeth = Checkbutton(fenetre,text="White Teeth",variable=var8, onvalue=1, offvalue=0).grid(row=8,column=0)
-    The_Resisters = Checkbutton(fenetre,text="The Resisters",variable=var9, onvalue=1, offvalue=0).grid(row=8,column=1)
-    The_Power = Checkbutton(fenetre,text="The Power",variable=var10, onvalue=1, offvalue=0).grid(row=8,column=2)
-    livre = Label(fenetre,text="Livre lus").grid(row=6,column=0)
+    check = []
+    j=0
+    k=4
+    for i in range(len(liste_livre)):
+        
+        var.append(IntVar())
+        check.append(Checkbutton(fenetre,text=liste_livre[i],variable=var[i],offvalue=0,onvalue=1))
+        check[i].grid(row=(k),column=j)
+        j+=1
+        if j > 4 :
+            j=0
+            k +=1
     #Ajout des livres lues a liste_like
 
 
@@ -286,14 +258,8 @@ def sceneprofile():
     number= 1
     img_nbr = 3
     #
-    Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username.get(),password.get(),sexe.get(),age.get())])
+    Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var,reading_style,username.get(),password.get(),sexe.get(),age.get())])
     Submit.grid(row=10,column=1)
-    
-    #Ecrire et Lire dans fichier txt
-    #fichier= open("login-password.txt","w")
-    #fichier.write(username)
-    #fichier.write(password)
-    #fichier.close()
 def popup(y):
     global liste_livre
     top = Toplevel(fenetre)
@@ -302,7 +268,7 @@ def popup(y):
     top.title("Modification")
     Label(top,text="Entrez le nouveau nom").pack(side=TOP)
     Entry(top,textvariable=nouveau_nom).pack(side=LEFT)
-    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get()),top.destroy()]).pack(side=LEFT)
+    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get()),top.destroy(),scenelivre()]).pack(side=LEFT)
     
     
 def scenelivre():
@@ -318,10 +284,16 @@ def scenelivre():
     labels,edit,delete = [],[],[]
     j=0
     c=0
+    k=0
+    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=1,column=3)
     for i in range(len(liste_livre)):
         if j ==16 or j ==32:
             c +=3
             j=0
+        while liste_livre[k]=="" and k!=len(liste_livre):
+            liste_livre[i]=liste_livre[k+1]
+            print(liste_livre[i])
+            k+=1
         labels.append(Label(fenetre,text=liste_livre[i]))
         labels[i].grid(row=1*(j+2),column=c)
             
@@ -329,12 +301,14 @@ def scenelivre():
         edit[i].grid(row=1*(j+2),column=c+1)
             
             
-        delete.append(Button(fenetre,text="Delete",command= lambda  x=i :[ delete_book(liste_livre[x]),scenelivre()]))
+        delete.append(Button(fenetre,text="Delete",command= lambda  x=i :[ delete_book(liste_livre[x]),suppr(x,delete,edit),scenelivre()]))
         delete[i].grid(row=1*(j+2),column=c+2)
         j+=1
-    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=1,column=3)
+        k+=1
     
-
+def suppr(x,delete,edit):
+    delete[x].grid_forget()
+    edit[x].grid_forget()
     
 def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_note):
     global liste_readers
@@ -355,7 +329,8 @@ def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_n
 
     return liste_readers
 
-def ajouter_livre(nom_livre,liste_livre):
+def ajouter_livre(nom_livre):
+    global liste_livre
     str(nom_livre)
    
     fichier = open("books.txt", "r")
