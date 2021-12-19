@@ -355,7 +355,6 @@ def ajouter_livre(nom_livre):
 
 def modifier_livre(nom_livre,nom_modify):
     nom_modify=  str(nom_modify)
-    print(nom_modify,nom_livre)
     with open("books.txt","r") as fichier:
         t = fichier.read()
     
@@ -372,24 +371,33 @@ def delete_book(nom_livre):
     
     with open("books.txt", "w") as fichier:
         fichier.write(t.replace(nom_livre,str()))
-     
+
 def delete_readers(index_readers):
     global liste_readers
     with open("readers.txt","r") as fichier:
             t = fichier.read()
         
-        
-    
     with open("readers.txt", "w") as fichier:
         fichier.write(t.replace(liste_readers[index_readers]["name"] + "," + str(liste_readers[index_readers]["sexe"]) + "," + str(liste_readers[index_readers]["age"]) + "," + str(liste_readers[index_readers]["reading_style"]),str()))
 
+    with open("booksread.txt") as fichier2:
+        cpt = 0
+        for line in fichier2:
+            if cpt == index_readers:
+                a = line
+                break
+            else :
+                cpt += 1
+        print(a)
 
-    print(liste_readers[index_readers]["name"] + "," + str(liste_readers[index_readers]["sexe"]) + "," + str(liste_readers[index_readers]["age"]) + "," + str(liste_readers[index_readers]["reading_style"]))
+    with open("booksread.txt","r") as fichier2:
+            t2 = fichier2.read()
+        
+    with open("booksread.txt", "w") as fichier2:
+        fichier2.write(t2.replace(a,str("\n")))
 
     liste_readers[index_readers] = None
     return liste_readers
-
-
 
 def matrice_generator(liste_readers):
     matrice = []
@@ -440,14 +448,10 @@ def note(liste_readers):
     
 def similarity_matrice(liste_readers,matrice):
     matrice_sim=[]
-    for a in range (0,len(liste_readers)-1):
+    for a in range (0,len(liste_readers)):
         matrice_sim.append([])
-        for b in range (0,len(liste_readers)-1):
+        for b in range (0,len(liste_readers)):
             matrice_sim[a].append(0)
-    
-    print(liste_readers[0]["booksread"],"note :",liste_readers[0]["note"])
-    print(liste_readers[2]["booksread"],"note :",liste_readers[2]["note"])
-    
 
         
     # a1xb1 +a2 * b2 + a3*b3 jusqu à  n (nombre de livres)
@@ -500,7 +504,7 @@ def recommandation(liste_readers,index_lecteur):
     liste_reco = []
     key_list = []
     note_list = []
-    for b in range(0,4):
+    for b in range(0,len(liste_readers[index_maxi]["booksread"])):
         if liste_readers[index_maxi]["booksread"][b] not in liste_readers[index_lecteur]["booksread"]:
             liste_reco.append(liste_readers[index_maxi]["booksread"][b])
             key_list.append(liste_readers[index_maxi]["booksread"].index(liste_readers[index_maxi]["booksread"][b]))
@@ -522,54 +526,48 @@ def initialized_liste_livre():
     return liste_livre
 
 def initialized_liste_readers():
+    fichier = open("readers.txt", "r")
     liste_readers = []
+    for line in fichier:
+        c = line.split(",")
+        if '\n' in c[-1][-2:]:
+            c[-1] = c[-1][0:-1]
+        liste_readers.append({"name":c[0],"sexe":int(c[1]),"age":int(c[2]),"img_picture":4,"reading_style":int(c[3]),"favorite_book":"Narnia"})
+
+        
+    return liste_readers
+    
+
 
     
 if __name__ == "__main__":
     global liste_readers
     global liste_livre
 
-    liste_readers = [
-        {"name":"Gilbert","sexe":1,"age":3,"img_picture":4,"reading_style":6,"favorite_book":"Narnia"},
-        {"name":"William","sexe":3,"age":3,"img_picture":4,"reading_style":7,"favorite_book":"Narnia"},
-        {"name":"AlienRoXoR17","sexe":2,"age":1,"img_picture":4,"reading_style":3,"favorite_book":"Narnia"},
-        {"name":"anonyme","sexe":3,"age":3,"img_picture":4,"reading_style":2,"favorite_book":"Narnia"},
-        {"name":"Lecteur_assidu","sexe":1,"age":1,"img_picture":4,"reading_style":3,"favorite_book":"Narnia"},
-        {"name":"haripoteur","sexe":3,"age":2,"img_picture":4,"reading_style":5,"favorite_book":"Narnia"},
-        {"name":"Lili","sexe":2,"age":2,"img_picture":4,"reading_style":2,"favorite_book":"Narnia"},
-        {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
-        ]
+    # liste_readers = [
+    #     {"name":"Gilbert","sexe":1,"age":3,"img_picture":4,"reading_style":6,"favorite_book":"Narnia"},
+    #     {"name":"William","sexe":3,"age":3,"img_picture":4,"reading_style":7,"favorite_book":"Narnia"},
+    #     {"name":"AlienRoXoR17","sexe":2,"age":1,"img_picture":4,"reading_style":3,"favorite_book":"Narnia"},
+    #     {"name":"anonyme","sexe":3,"age":3,"img_picture":4,"reading_style":2,"favorite_book":"Narnia"},
+    #     {"name":"Lecteur_assidu","sexe":1,"age":1,"img_picture":4,"reading_style":3,"favorite_book":"Narnia"},
+    #     {"name":"haripoteur","sexe":3,"age":2,"img_picture":4,"reading_style":5,"favorite_book":"Narnia"},
+    #     {"name":"Lili","sexe":2,"age":2,"img_picture":4,"reading_style":2,"favorite_book":"Narnia"},
+    #     {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
+    #     ]
 
-
+    liste_readers = initialized_liste_readers()
     liste_livre = initialized_liste_livre()
 
-    # liste_livre=["Débuter la programmation Java",
-    # "Apprendre Python",
-    # "Les Citations du Président Mao Tse-Toung",
-    # "Don Quichotte de la Manche",
-    # "Un conte de deux villes",
-    # "Le Seigneur des Anneaux",
-    # "Le Petit Prince",
-    # "Harry Potter à l’école des sorciers",
-    # "Dix Petits Nègres",
-    # "Le rêve dans le Pavillon rouge",
-    # "Le Lion, la Sorcière blanche et l’Armoire magique",
-    # "Elle – She : a history of Adventure",
-    # "The Da Vinci Code",
-    # "Réfléchissez et devenez riche",
-    # "Harry Potter et le Prince de Sang mêlé",
-    # "L’Alchimiste",
-    # "Harry Potter et la Chambre des Secrets",
-    # "L’attrape-cœurs, The Catcher in the Rye",
-    # "Narnia"]
 
 
-    # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
 
-    liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,5) #livre à recommandé pour lecteur 5 d'index 4 dans liste_readers
+
+    liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,8) #livre à recommandé pour lecteur 9 d'index 8 dans liste_readers
     print("le livre à lire est le livre",livre_recommandation)
 
-
+    delete_readers(4)
+    # for a in range(0,len(liste_readers)):
+    #     print(liste_readers[a])
     # liste_readers = ajouter_readers( 3, "Mathieu", 18, 1, 3, [1,3,4],1 ,[5,4,2])
     fenetre= Tk()
     username = StringVar()
