@@ -286,7 +286,7 @@ def sceneprofile():
     number= 1
     img_nbr = 3
     #
-    Submit=Button(fenetre,text="S'inscire",command=lambda: [clear(),submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username.get(),password.get(),sexe.get(),age.get())])
+    Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username.get(),password.get(),sexe.get(),age.get())])
     Submit.grid(row=10,column=1)
     
     #Ecrire et Lire dans fichier txt
@@ -302,11 +302,12 @@ def popup(y):
     top.title("Modification")
     Label(top,text="Entrez le nouveau nom").pack(side=TOP)
     Entry(top,textvariable=nouveau_nom).pack(side=LEFT)
-    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get(),top.destroy())]).pack(side=LEFT)
+    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get()),top.destroy()]).pack(side=LEFT)
     
     
 def scenelivre():
-    print("test")
+    global liste_livre
+    liste_livre = initialized_liste_livre()
     livre = StringVar()
     add_livre = Label(fenetre,text="Entrez le nom du livre que vous souhaitez ajouter")
     livreentry = Entry(fenetre,textvariable=livre)
@@ -333,7 +334,7 @@ def scenelivre():
         j+=1
     hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=1,column=3)
     
-    
+
     
 def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_style,liste_note):
     global liste_readers
@@ -436,7 +437,7 @@ def matrice_generator(liste_readers):
 
     return matrice
 
-#def note(liste_readers):
+def note(liste_readers):
     with open('booksread.txt') as fichier:
         cpt = 0
         for line in fichier:
@@ -496,7 +497,7 @@ def similarity_btw_readers(liste_readers,matrice,matrice_sim):
     #     print (":",matrice_sim[b])
     return matrice_sim
 
-def modifier_reader(liste_readers,index,number,name,age,genre,img_nbr,liste_like,reading_style):
+def modifier_reader(liste_readers,index,name,age,genre,img_nbr,liste_like,reading_style):
     with open("readers.txt","r") as fichier:
         t = fichier.read()
 
@@ -535,6 +536,7 @@ def recommandation(liste_readers,index_lecteur):
     return liste_readers,matrice,matrice_sim,livre_recommandation
 
 def initialized_liste_livre():
+    global liste_livre
     liste_livre = []
     fichier = open("books.txt", "r")
     for line in fichier:
@@ -586,7 +588,7 @@ if __name__ == "__main__":
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
 
-    liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,5) #livre à recommandé pour lecteur 4 d'index 3 dans liste_readers
+    liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,5) #livre à recommandé pour lecteur 5 d'index 4 dans liste_readers
     print("le livre à lire est le livre",livre_recommandation)
 
 
