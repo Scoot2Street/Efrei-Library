@@ -265,7 +265,7 @@ def sceneprofile():
     #Sumbit button
     number= 1
     img_nbr = 3
-    Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var,style,username.get(),password.get(),sexe.get(),age.get())])
+    Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var,style.get(),username.get(),password.get(),sexe.get(),age.get())])
 
     Submit.grid(row=100,column=1)
 #The popup to modify a book's name
