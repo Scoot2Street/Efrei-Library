@@ -328,7 +328,7 @@ def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_styl
 
     return liste_readers
 
-def ajouter_livre(nom_livre):
+def ajouter_livre(nom_livre,liste_livre):
     str(nom_livre)
    
     fichier = open("books.txt", "r")
@@ -341,8 +341,13 @@ def ajouter_livre(nom_livre):
 
             fichier = open("books.txt", "a")
             fichier.write("\n" + nom_livre)
+            liste_livre.append(nom_livre)
+
             print("Ce bouquin a été ajouté")
+    
     fichier.close
+
+    return liste_livre
 
 def modifier_livre(nom_livre,nom_modify):
     nom_modify=  str(nom_modify)
@@ -395,11 +400,9 @@ def matrice_generator(liste_readers):
         cpt = 0
         for livre_lu in liste_readers[lecteur]["booksread"]:
             # print("lecteur",lecteur,"livre_lu",livre_lu,"coordonnées",int(livre_lu)-1," + ",lecteur,"note ajoutée",liste_readers[lecteur]["note"][cpt],"cpt",cpt)
-
             matrice[int(livre_lu)-1][lecteur] = int(liste_readers[lecteur]["note"][cpt])
 
             cpt += 1
-
  
     # #0 = pas lu 5 = excellent
     # print (matrice)
@@ -505,8 +508,17 @@ def recommandation(liste_readers,index_lecteur):
 
     return liste_readers,matrice,matrice_sim,livre_recommandation
 
+def initialized_liste_livre():
+    liste_livre = []
+    fichier = open("books.txt", "r")
+    for line in fichier:
+        liste_livre.append(line[0:-1])
+    return liste_livre
 
+def initialized_liste_readers():
+    liste_readers = []
 
+    
 if __name__ == "__main__":
     global liste_readers
     global liste_livre
@@ -522,33 +534,36 @@ if __name__ == "__main__":
         {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
         ]
 
-    liste_livre=["Débuter la programmation Java",
-    "Apprendre Python",
-    "Les Citations du Président Mao Tse-Toung",
-    "Don Quichotte de la Manche",
-    "Un conte de deux villes",
-    "Le Seigneur des Anneaux",
-    "Le Petit Prince",
-    "Harry Potter à l’école des sorciers",
-    "Dix Petits Nègres",
-    "Le rêve dans le Pavillon rouge",
-    "Le Lion, la Sorcière blanche et l’Armoire magique",
-    "Elle – She : a history of Adventure",
-    "The Da Vinci Code",
-    "Réfléchissez et devenez riche",
-    "Harry Potter et le Prince de Sang mêlé",
-    "L’Alchimiste",
-    "Harry Potter et la Chambre des Secrets",
-    "L’attrape-cœurs, The Catcher in the Rye",
-    "Narnia"]
+
+    liste_livre = initialized_liste_livre()
+
+    # liste_livre=["Débuter la programmation Java",
+    # "Apprendre Python",
+    # "Les Citations du Président Mao Tse-Toung",
+    # "Don Quichotte de la Manche",
+    # "Un conte de deux villes",
+    # "Le Seigneur des Anneaux",
+    # "Le Petit Prince",
+    # "Harry Potter à l’école des sorciers",
+    # "Dix Petits Nègres",
+    # "Le rêve dans le Pavillon rouge",
+    # "Le Lion, la Sorcière blanche et l’Armoire magique",
+    # "Elle – She : a history of Adventure",
+    # "The Da Vinci Code",
+    # "Réfléchissez et devenez riche",
+    # "Harry Potter et le Prince de Sang mêlé",
+    # "L’Alchimiste",
+    # "Harry Potter et la Chambre des Secrets",
+    # "L’attrape-cœurs, The Catcher in the Rye",
+    # "Narnia"]
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
 
-    liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,3) #livre à recommandé pour lecteur 4 d'index 3 dans liste_readers
+    liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,5) #livre à recommandé pour lecteur 4 d'index 3 dans liste_readers
     print("le livre à lire est le livre",livre_recommandation)
-    # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
-    # liste_readers = delete_readers(2,liste_readers)
-    liste_readers = ajouter_readers( 3, "Mathieu", 18, 1, 3, [1,3,4],1 ,[5,4,2])
+
+
+    # liste_readers = ajouter_readers( 3, "Mathieu", 18, 1, 3, [1,3,4],1 ,[5,4,2])
     fenetre= Tk()
     username = StringVar()
     sexe = StringVar()
