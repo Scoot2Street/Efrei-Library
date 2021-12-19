@@ -161,7 +161,7 @@ def scene_readers():
             edit[j].grid(row=1*j,column=1)
             
             
-            delete.append(Button(fenetre,text="Delete",command= lambda  x=j :[ delete_readers(x),scene_readers()]))                                                                         #Displaying a delete button to delete user
+            delete.append(Button(fenetre,text="Delete",command= lambda  x=j :[ clear(),delete_readers(x),scene_readers()]))                                                                         #Displaying a delete button to delete user
             delete[j].grid(row=1*j,column=2)
             
             j+=1
