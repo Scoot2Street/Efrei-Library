@@ -1,6 +1,6 @@
 
+#Program made by Julien Le Ber and Mathieu Roche (Aladdi group)
 
-from io import UnsupportedOperation
 import os
 import random
 import time
@@ -13,10 +13,12 @@ from tkinter import *
 from tkinter.font import names 
 TK_SILENCE_DEPRECATION=1
 
+#Clear the window of all the widget
 def clear():
-    for widgets in fenetre.winfo_children():
-      widgets.destroy()
+    for widgets in fenetre.winfo_children(): #Take all of the widget in the window 
+      widgets.destroy()                      #and destroy them all
 
+#Submit all of the info entered in the inscription form
 def submit(var,reading_style,username,password,sexe,age):
     global liste_readers
     global liste_livre
@@ -28,22 +30,34 @@ def submit(var,reading_style,username,password,sexe,age):
     liste_like=[]
     exemple = {}
     print(var)
-    for i in range(len(var)):
-        if var[i].get()==1:
-            liste_like.append(i)
+    for i in range(len(var)):           #for all of the books existing, if 
+        if var[i].get()==1:             #the box was checked, add the following 
+            liste_like.append(i)        #number i in liste_like
             print(liste_like)
-    if sexe == "Homme":
-        sexe=1
+    if sexe == "Homme":                 #Checking whether the user is a male,
+        sexe=1                          #Female or else
     elif sexe=="Femme":
         sexe=2
     elif sexe=="Non Déterminé":
         sexe=3 
-    top = Toplevel(fenetre)
+    styleoption= ["sci-fi",
+                  "Biography",
+                  "Horror",
+                  "Romance",
+                  "Fable",
+                  "History",
+                  "Comedy"
+                  ]
+    for i in range(len(styleoption)):
+        if style.get() == styleoption[i]:           #Checking which style the user
+            style.set(i)                            #love
+ 
+    top = Toplevel(fenetre)             #Creating a popup to rate all of the books read
     top.geometry("500x500")
     top.title("Rating")    
     for h in range(1,6):
-        note.append(Label(top,text=h))
-        note[h-1].grid(row=0,column=h)
+        note.append(Label(top,text=h))  #display all of the number from 1 to 5
+        note[h-1].grid(row=0,column=h)  
             
     for i in range(len(liste_like)):
         temp = liste_like[i]
@@ -51,121 +65,128 @@ def submit(var,reading_style,username,password,sexe,age):
         rating.append(check)
         Label(top,text="Evaluer les livres que vous avez lues : ").grid(row=0,column=0)
         
-        for j in range(5):
-            rdiobutton.append(Radiobutton(top,variable=rating[i],value=j+1))
-            print(j)
+        for j in range(5):              
+            rdiobutton.append(Radiobutton(top,variable=rating[i],value=j+1))            #Putting in a list all of the radio button
+            print(j)                                                                    #To generate for a given number of books existing
             rdiobutton[j+(i*5)].grid(row=i+1,column=j+1)
             
         
-        labels.append(Label(top,text=liste_livre[temp]))
-        labels[i].grid(row=(i+1),column=0)
+        labels.append(Label(top,text=liste_livre[temp]))                                #Generating the Label with the tilte of each
+        labels[i].grid(row=(i+1),column=0)                                              #book 
         exemple[liste_livre[i]] = rating[i].get()
     
     img_nbr = 1
-    Submit=Button(top,text="Confirmer",highlightbackground='#3E4149',command=lambda: [clear(),notation(username,age,sexe,img_nbr,liste_like,reading_style,rating),fenetremain()])
+    Submit=Button(top,text="Confirmer",command=lambda: [clear(),notation(username,age,sexe,img_nbr,liste_like,reading_style,rating),fenetremain()])
     Submit.grid(row=10,column=0)
 
+#Putting in a list all of the note of a user
 def notation(username,age,sexe,img_nbr,liste_like,reading_style,rating):
     liste_note = []
     for i in range(len(rating)):
         liste_note.append(rating[i].get())  
     ajouter_readers(username,age,sexe,img_nbr,liste_like,reading_style,liste_note)
 
+#The hub/main window
 def fenetremain():    
     fenetre.title("Library Efrei")
-    fenetre.geometry("800x500")
+    fenetre.geometry("800x500")         #The option of the window
     
+    #Title
     
-    
-    
-    #Label
-    
-    label = Label(fenetre, text="Bienvenue sur EfreiLibrary")
+    label = Label(fenetre, text="Bienvenue sur EfreiLibrary")          
     label.config(font=("Arial", 16))
     label.pack(side=TOP)
     
-    #gestion de l'image
+    #Adding an image to the hub
     logo = PhotoImage(file="t.gif")
     can = Canvas(fenetre,width="400",height="400")
     can.create_image(200,200,image=logo)
     can.image = logo
     can.pack()
-    #inscription boutton
+    
+    #inscription button
     
     inscription=Button(fenetre,text="S'inscrire",command=lambda: [clear(),sceneprofile()])
     inscription.pack(side=LEFT,expand=YES)
-    #profile boutton
+    #profile button
     profile = Button(fenetre,text="Acceder aux profiles existants",command=lambda: [clear(),scene_readers()])
     profile.pack(side=LEFT,expand=YES)
-    #add livre boutton
-    addlivre = Button(fenetre,text="Ajouter un livre",command=lambda: [clear(),scenelivre()])
+    #add livre button
+    addlivre = Button(fenetre,text="Ajouter un livre",command=lambda: [clear(),scenebook()])
     addlivre.pack(side=LEFT,expand=YES)
-    #Recommandation boutton
+    #Recommandation button
     recommandation = Button(fenetre,text="Acceder aux recommandations",command=lambda: [clear(),scenerecommandation()])
     recommandation.pack(side=LEFT,expand=YES)
     fenetre.mainloop()  
 
+#The recommandation window/scene
 def scenerecommandation():
     pseudo = StringVar()
-    Label(fenetre,text="Entrez votre pseudo").grid(row=0,column=0)
-    Entry(fenetre,textvariable=pseudo).grid(row=0,column=1)
-    Button(fenetre,text="Valider",command=lambda:[]).grid(row=0,column=2)
-    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=1,column=0)
+    Label(fenetre,text="Entrez votre pseudo").grid(row=0,column=0)                                          #Checking if the pseudo exist
+    Entry(fenetre,textvariable=pseudo).grid(row=0,column=1)                                                 #Enter your pseudo
+    Button(fenetre,text="Valider",command=lambda:[recom_button(pseudo)]).grid(row=0,column=2)
+    Label(fenetre,text="Livre recommandés :").grid(row=1,column=0)
+    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=2,column=0)
 
+#Displaying the recommanded book 
+def recom_button(pseudo):
+    pseudo1=StringVar()
+    pseudo1.set(pseudo.get())
+    a,b = personne_existe(pseudo1.get()) 
+    
+    if b == True :
+        pseudo1.set(recommandation(a))                          #Checking if the pseudo exist
+        clear()                                                 #If it exist, displaying the book 
+        scenerecommandation()                                   #recommandation
+    if b == False :                                             #If not , displaying "Ce lecteur n'existe pas"
+        pseudo1.set("Ce lecteur n'existe pas")
+        clear()
+        scenerecommandation()
+    Label(fenetre,textvariable=pseudo1).grid(row=1,column=1)
+
+#The reader window/scene
 def scene_readers():
     global liste_readers
     labels = []
     edit = []
     delete = []
-    
-    myFrame = Frame(fenetre).place(x=50, y=100)
-    
     j=0
     l = []
     
-    for i in liste_readers: 
+    for i in liste_readers:                                                                                                                                                                 #For each user
         if i != None:
-            labels.append(Label(fenetre,text=i["name"]+" "+str(i["sexe"]) + " " + str(i["age"]) + " " + str(i["img_picture"]) + " " + str(i["reading_style"]) + " " + i["favorite_book"]))
+            labels.append(Label(fenetre,text=i["name"]+" "+str(i["sexe"]) + " " + str(i["age"]) + " " + str(i["img_picture"]) + " " + str(i["reading_style"]) + " " + i["favorite_book"]))  #Displaying all of the user's info
             labels[j].grid(row=1*j,column=0)
             
-            edit.append(Button(fenetre,text="Edit",command=lambda y=j: [a(y),clear(),sceneprofile()]))
+            edit.append(Button(fenetre,text="Edit",command=lambda y=j: [convert(y),clear(),sceneprofile()]))                                                                                #Displaying an edit button to change th user's info
             edit[j].grid(row=1*j,column=1)
             
             
-            delete.append(Button(fenetre,text="Delete",command= lambda  x=j :[ delete_readers(x),scene_readers()]))
+            delete.append(Button(fenetre,text="Delete",command= lambda  x=j :[ delete_readers(x),scene_readers()]))                                                                         #Displaying a delete button to delete user
             delete[j].grid(row=1*j,column=2)
             
             j+=1
-    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()])
+    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()])                                                                                                      #Hub button
     hub.grid(row=j+1,column=0)   
 
-def a(y):
+#Converting all of the Var into python var and checking the favorite style of the user
+def convert(y):
+    
     global liste_readers
     global username
     global sexe
     global age
     global style
     
-    username.set(liste_readers[y]["name"])
-    sexe.set(liste_readers[y]["sexe"])
+    username.set(liste_readers[y]["name"])          #Converting username,sexe and age into 
+    sexe.set(liste_readers[y]["sexe"])              #the old user info
     age.set(liste_readers[y]["age"])
     style.set(liste_readers[y]["reading_style"])
-    if style.get() == "sci-fi":
-        reading_style=1
-    elif style.get() == "Biography":
-        reading_style=2
-    elif style.get() == "Horror":
-        reading_style=3
-    elif style.get()== "Romance":
-        reading_style=4       
-    elif style.get() == "Fable":
-        reading_style=5
-    elif style.get()=="History":
-        reading_style=6
-    elif style.get() == "Comedy":
-        reading_style=7   
-      
+     
+
+#The window/scene of the inscription form
 def sceneprofile():
+    
     global liste_readers
     global liste_livre
     global username
@@ -206,7 +227,7 @@ def sceneprofile():
                   "History",
                   "Comedy"
                   ]
-    if style.get() == "":
+    if style.get() == "":                       #Making a default choice "sci-fi"
         style.set(styleoption[0])
     w = OptionMenu(fenetre,style,*styleoption)
     w.grid(row=4,column=1)
@@ -217,48 +238,31 @@ def sceneprofile():
     liste_like=[]
     check = []
     j=0
-    k=4
-    for i in range(len(liste_livre)):
-        
-        var.append(IntVar())
-        check.append(Checkbutton(fenetre,text=liste_livre[i],variable=var[i],offvalue=0,onvalue=1))
-        check[i].grid(row=(k),column=j)
-        j+=1
-        if j > 2 :
-            j=0
-            k +=1
-    #Ajout des livres lues a liste_like
-
-
-    #Convertir reading style en int
-    reading_style=1
-    if style.get() == "sci-fi":
-        reading_style=1
-    elif style.get() == "Biography":
-        reading_style=2
-    elif style.get() == "Horror":
-        reading_style=3
-    elif style.get()== "Romance":
-        reading_style=4       
-    elif style.get() == "Fable":
-        reading_style=5
-    elif style.get()=="History":
-        reading_style=6
-    elif style.get() == "Comedy":
-        reading_style=7           
-        
+    k=5
+    for i in range(len(liste_livre)):                                                                       #For all of the existing books
+        if liste_livre[i]!="":                                                                              #Making sure there is acutally a name 
+            var.append(IntVar())                                                                            #Creating a list of IntVar()
+            check.append(Checkbutton(fenetre,text=liste_livre[i],variable=var[i],offvalue=0,onvalue=1))     #Generating checkbutton with intvar in a list
+            check[i].grid(row=(k),column=j)                                                                 #Placing all of the check button
+            j+=1
+            if j > 2 :                                                                                      #Making sure that if there is too much books
+                j=0                                                                                         #the programm change row
+                k +=1
+                   
     
     #Bouton retourner au hub
     hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()])
-    hub.grid(row=20,column=0)
+    hub.grid(row=200,column=0)
     #Convertir en str
     #Sumbit button
     number= 1
     img_nbr = 3
     #
-    Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var,reading_style,username.get(),password.get(),sexe.get(),age.get())])
-    Submit.grid(row=10,column=1)
+    Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var,style,username.get(),password.get(),sexe.get(),age.get())])
 
+    Submit.grid(row=100,column=1)
+
+#The popup to modify a book's name
 def popup(y):
     global liste_livre
     top = Toplevel(fenetre)
@@ -267,15 +271,16 @@ def popup(y):
     top.title("Modification")
     Label(top,text="Entrez le nouveau nom").pack(side=TOP)
     Entry(top,textvariable=nouveau_nom).pack(side=LEFT)
-    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get()),top.destroy(),scenelivre()]).pack(side=LEFT)
+    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get()),top.destroy(),scenebook()]).pack(side=LEFT)
       
-def scenelivre():
+#The window/scene where all of the books are displayed
+def scenebook():
     global liste_livre
-    liste_livre = initialized_liste_livre()
+    liste_livre = initialized_liste_livre() #Refreshing books database
     livre = StringVar()
     add_livre = Label(fenetre,text="Entrez le nom du livre que vous souhaitez ajouter")
     livreentry = Entry(fenetre,textvariable=livre)
-    entrer = Button(fenetre,text="Entrer",command=lambda:[ajouter_livre(livre.get()),livre.set(""),scenelivre()])
+    entrer = Button(fenetre,text="Entrer",command=lambda:[ajouter_livre(livre.get()),livre.set(""),scenebook()])
     add_livre.grid(row=0,column=0)
     livreentry.grid(row=1,column=0)
     entrer.grid(row=1,column=1)
@@ -284,35 +289,38 @@ def scenelivre():
     c=0
     k=0
     hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=1,column=3)
-    for i in range(len(liste_livre)):
-        if j ==16 or j ==32:
+    for i in range(len(liste_livre)):                   #For all of the books in liste_livre
+        if j ==16 or j ==32:                            #Making sure after 16 or 32 books, the programm goes to the next column
             c +=3
             j=0
-        if liste_livre[i]!="":
+        if liste_livre[i]!="":                          #Making sure there is an actual book name and not just an empty line
             
-            labels.append(Label(fenetre,text=liste_livre[i]))
-            labels[k].grid(row=1*(j+2),column=c)
+            labels.append(Label(fenetre,text=liste_livre[i]))       #Generating all of the books name into a list of label
+            labels[k].grid(row=1*(j+2),column=c)                    #Displaying all of the books
                 
-            edit.append(Button(fenetre,text="Edit",command=lambda y=i: [popup(y)]))
-            edit[k].grid(row=1*(j+2),column=c+1)
+            edit.append(Button(fenetre,text="Edit",command=lambda y=i: [popup(y)]))     #Generating all of the edit button next to the book's name
+            edit[k].grid(row=1*(j+2),column=c+1)                                        #Displaying all of the edit button
+
                 
-                
-            delete.append(Button(fenetre,text="Delete",command= lambda  x=i , z=k:[ delete_book(liste_livre[x]),suppr(z,delete,edit)]))
-            delete[k].grid(row=1*(j+2),column=c+2)
+            delete.append(Button(fenetre,text="Delete",command= lambda  x=i , z=k:[ delete_book(liste_livre[x]),suppr(z,delete,edit)]))     #generating all of the delete button next to the edit button
+            delete[k].grid(row=1*(j+2),column=c+2)                                                                                          #Displaying all of the delete button
             j+=1
             k+=1
         else:
             i+=1
 
-def suppr(x,delete,edit):
-    delete[x].grid_forget()
-    edit[x].grid_forget()
-    clear()
-    scenelivre()
 
+#Deleting the widget of a deleted book
+def suppr(x,delete,edit):
+    delete[x].grid_forget()     #Deleting the delete button of a deleted book
+    edit[x].grid_forget()       #Deleting the edit button of a deleted book
+    clear()                     #Refreshing the window/scene
+    scenebook()
+    
 #function to add a reader with his name,age,genre, liste_like (according to books who has been read by the reader), reading_style and the liste of all note with the same index as liste_like
-# the returned result is the updated liste_reader,readers.txt and booksread.txt    
-def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_note): 
+# the returned result is the updated liste_reader,readers.txt and booksread.txt   
+def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_note):
+
     global liste_readers
     liste_readers.append({"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"})
     fichier = open("readers.txt", "a")
@@ -504,6 +512,10 @@ def modifier_reader(liste_readers,index,name,age,genre,img_nbr,liste_like,readin
 #the global function who call another function to call from the start of the creation of the matrice to the final recommandation of a book just by specify his index
 #output : the recommanded book for a specific readers (index_lecteur)
 def recommandation(liste_readers,index_lecteur):
+
+    
+    global liste_readers
+
     liste_readers = note(liste_readers)
     matrice = matrice_generator(liste_readers)
     matrice_sim = similarity_matrice(liste_readers,matrice)
@@ -525,8 +537,7 @@ def recommandation(liste_readers,index_lecteur):
         note_max = note_list.index(max(note_list))
 
     livre_recommandation = liste_reco[note_max]
-
-    return liste_readers,matrice,matrice_sim,livre_recommandation
+    return (liste_livre[int(livre_recommandation)])
 
 
 #function to create a liste of books by taking the information stored in the books.txt
@@ -553,8 +564,10 @@ def initialized_liste_readers():
         
     return liste_readers
     
+
 #function to check if a reader is in the database
 #the index of the reader and a True or False condition
+
 def personne_existe(nom):
     global liste_readers
     for a in range (0,len(liste_readers)):
@@ -569,7 +582,7 @@ if __name__ == "__main__":
 
     liste_readers = initialized_liste_readers()
     liste_livre = initialized_liste_livre()
-    liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,8) #livre à recommandé pour lecteur 9 d'index 8 dans liste_readers
+
 
     fenetre= Tk()
     username = StringVar()
