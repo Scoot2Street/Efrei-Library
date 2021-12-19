@@ -226,7 +226,7 @@ def sceneprofile():
         check.append(Checkbutton(fenetre,text=liste_livre[i],variable=var[i],offvalue=0,onvalue=1))
         check[i].grid(row=(k),column=j)
         j+=1
-        if j > 4 :
+        if j > 2 :
             j=0
             k +=1
     #Ajout des livres lues a liste_like
@@ -290,25 +290,26 @@ def scenelivre():
         if j ==16 or j ==32:
             c +=3
             j=0
-        while liste_livre[k]=="" and k!=len(liste_livre):
-            liste_livre[i]=liste_livre[k+1]
-            print(liste_livre[i])
+        if liste_livre[i]!="":
+            
+            labels.append(Label(fenetre,text=liste_livre[i]))
+            labels[k].grid(row=1*(j+2),column=c)
+                
+            edit.append(Button(fenetre,text="Edit",command=lambda y=i: [popup(y)]))
+            edit[k].grid(row=1*(j+2),column=c+1)
+                
+                
+            delete.append(Button(fenetre,text="Delete",command= lambda  x=i , z=k:[ delete_book(liste_livre[x]),suppr(z,delete,edit)]))
+            delete[k].grid(row=1*(j+2),column=c+2)
+            j+=1
             k+=1
-        labels.append(Label(fenetre,text=liste_livre[i]))
-        labels[i].grid(row=1*(j+2),column=c)
-            
-        edit.append(Button(fenetre,text="Edit",command=lambda y=i: [popup(y)]))
-        edit[i].grid(row=1*(j+2),column=c+1)
-            
-            
-        delete.append(Button(fenetre,text="Delete",command= lambda  x=i :[ delete_book(liste_livre[x]),suppr(x,delete,edit),scenelivre()]))
-        delete[i].grid(row=1*(j+2),column=c+2)
-        j+=1
-        k+=1
-    
+        else:
+            i+=1
 def suppr(x,delete,edit):
     delete[x].grid_forget()
     edit[x].grid_forget()
+    clear()
+    scenelivre()
     
 def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_note):
     global liste_readers
@@ -342,7 +343,7 @@ def ajouter_livre(nom_livre):
 
 
             fichier = open("books.txt", "a")
-            fichier.write("\n" + nom_livre)
+            fichier.write("\n" + nom_livre +"\n" )
             liste_livre.append(nom_livre)
 
             print("Ce bouquin a été ajouté")
