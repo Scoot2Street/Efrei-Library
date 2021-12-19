@@ -7,7 +7,7 @@ import time
 import tkinter
 from math import *
 from tkinter import font
-from Profile import *
+
 
 from tkinter import *
 from tkinter.font import names 
@@ -286,7 +286,7 @@ def sceneprofile():
     number= 1
     img_nbr = 3
     #
-    Submit=Button(fenetre,text="S'inscire",command=lambda: [clear(),submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username.get(),password.get(),sexe.get(),age.get())])
+    Submit=Button(fenetre,text="S'inscrire",command=lambda: [clear(),submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,username.get(),password.get(),sexe.get(),age.get())])
     Submit.grid(row=10,column=1)
     
     #Ecrire et Lire dans fichier txt
@@ -302,11 +302,12 @@ def popup(y):
     top.title("Modification")
     Label(top,text="Entrez le nouveau nom").pack(side=TOP)
     Entry(top,textvariable=nouveau_nom).pack(side=LEFT)
-    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get(),top.destroy())]).pack(side=LEFT)
+    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get()),top.destroy()]).pack(side=LEFT)
     
     
 def scenelivre():
-    print("test")
+    global liste_livre
+    liste_livre = initialized_liste_livre()
     livre = StringVar()
     add_livre = Label(fenetre,text="Entrez le nom du livre que vous souhaitez ajouter")
     livreentry = Entry(fenetre,textvariable=livre)
@@ -333,9 +334,9 @@ def scenelivre():
         j+=1
     hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=1,column=3)
     
+
     
-    
-def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_style):
+def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_style,liste_note):
     global liste_readers
     liste_readers.append({"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"})
     fichier = open("readers.txt", "a")
@@ -344,11 +345,17 @@ def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_styl
     fichier2.write("\n" + name)
     for a in liste_like:
         fichier2.write("," + str(a))
+    fichier2.write("%")
+    for a in liste_note:
+        fichier2.write(str(a))
+        if a != liste_note[-1]:
+            fichier2.write(",")
+
     print("Ce lecteur a été ajouté")
 
     return liste_readers
 
-def ajouter_livre(nom_livre):
+def ajouter_livre(nom_livre,liste_livre):
     str(nom_livre)
    
     fichier = open("books.txt", "r")
@@ -361,8 +368,13 @@ def ajouter_livre(nom_livre):
 
             fichier = open("books.txt", "a")
             fichier.write("\n" + nom_livre)
+            liste_livre.append(nom_livre)
+
             print("Ce bouquin a été ajouté")
+    
     fichier.close
+
+    return liste_livre
 
 def modifier_livre(nom_livre,nom_modify):
     nom_modify=  str(nom_modify)
@@ -415,11 +427,9 @@ def matrice_generator(liste_readers):
         cpt = 0
         for livre_lu in liste_readers[lecteur]["booksread"]:
             # print("lecteur",lecteur,"livre_lu",livre_lu,"coordonnées",int(livre_lu)-1," + ",lecteur,"note ajoutée",liste_readers[lecteur]["note"][cpt],"cpt",cpt)
-
             matrice[int(livre_lu)-1][lecteur] = int(liste_readers[lecteur]["note"][cpt])
 
             cpt += 1
-
  
     # #0 = pas lu 5 = excellent
     # print (matrice)
@@ -427,7 +437,7 @@ def matrice_generator(liste_readers):
 
     return matrice
 
-#def note(liste_readers):
+def note(liste_readers):
     with open('booksread.txt') as fichier:
         cpt = 0
         for line in fichier:
@@ -468,8 +478,8 @@ def similarity_matrice(liste_readers,matrice):
 
 def similarity_btw_readers(liste_readers,matrice,matrice_sim):
 
-    for b in range (0,len(matrice)):
-        print ("=",matrice[b])
+    # for b in range (0,len(matrice)):
+    #     print ("=",matrice[b])
     
     for b in range (0,len(matrice_sim)):
         for c in range (0,len(matrice_sim[b])):
@@ -483,11 +493,11 @@ def similarity_btw_readers(liste_readers,matrice,matrice_sim):
             val4 = round(val4,2)
             matrice_sim[b][c] = val4
 
-    for b in range (0,len(matrice_sim)):
-        print (":",matrice_sim[b])
+    # for b in range (0,len(matrice_sim)):
+    #     print (":",matrice_sim[b])
     return matrice_sim
 
-def modifier_reader(liste_readers,index,number,name,age,genre,img_nbr,liste_like,reading_style):
+def modifier_reader(liste_readers,index,name,age,genre,img_nbr,liste_like,reading_style):
     with open("readers.txt","r") as fichier:
         t = fichier.read()
 
@@ -499,6 +509,44 @@ def modifier_reader(liste_readers,index,number,name,age,genre,img_nbr,liste_like
 
     return liste_readers
 
+def recommandation(liste_readers,index_lecteur):
+    liste_readers = note(liste_readers)
+    matrice = matrice_generator(liste_readers)
+    matrice_sim = similarity_matrice(liste_readers,matrice)
+    matrice_sim  = similarity_btw_readers(liste_readers,matrice,matrice_sim)
+    copie = matrice_sim[index_lecteur]
+    copie[index_lecteur] = 0
+    maxi = max(copie)
+    index_maxi = copie.index(maxi)
+    a = max([len(liste_readers[index_lecteur]["booksread"]),len(liste_readers[index_maxi]["booksread"])])
+    liste_reco = []
+    key_list = []
+    note_list = []
+    for b in range(0,4):
+        if liste_readers[index_maxi]["booksread"][b] not in liste_readers[index_lecteur]["booksread"]:
+            liste_reco.append(liste_readers[index_maxi]["booksread"][b])
+            key_list.append(liste_readers[index_maxi]["booksread"].index(liste_readers[index_maxi]["booksread"][b]))
+    
+    for c in key_list:
+        note_list.append(liste_readers[index_maxi]["note"][c])
+        note_max = note_list.index(max(note_list))
+
+    livre_recommandation = liste_reco[note_max]
+
+    return liste_readers,matrice,matrice_sim,livre_recommandation
+
+def initialized_liste_livre():
+    global liste_livre
+    liste_livre = []
+    fichier = open("books.txt", "r")
+    for line in fichier:
+        liste_livre.append(line[0:-1])
+    return liste_livre
+
+def initialized_liste_readers():
+    liste_readers = []
+
+    
 if __name__ == "__main__":
     global liste_readers
     global liste_livre
@@ -514,35 +562,37 @@ if __name__ == "__main__":
         {"name":"ArchiBald_fx","sexe":1,"age":3,"img_picture":4,"reading_style":4,"favorite_book":"Narnia"}
         ]
 
-    liste_livre=["Débuter la programmation Java",
-    "Apprendre Python",
-    "Les Citations du Président Mao Tse-Toung",
-    "Don Quichotte de la Manche",
-    "Un conte de deux villes",
-    "Le Seigneur des Anneaux",
-    "Le Petit Prince",
-    "Harry Potter à l’école des sorciers",
-    "Dix Petits Nègres",
-    "Le rêve dans le Pavillon rouge",
-    "Le Lion, la Sorcière blanche et l’Armoire magique",
-    "Elle – She : a history of Adventure",
-    "The Da Vinci Code",
-    "Réfléchissez et devenez riche",
-    "Harry Potter et le Prince de Sang mêlé",
-    "L’Alchimiste",
-    "Harry Potter et la Chambre des Secrets",
-    "L’attrape-cœurs, The Catcher in the Rye",
-    "Narnia"]
+
+    liste_livre = initialized_liste_livre()
+
+    # liste_livre=["Débuter la programmation Java",
+    # "Apprendre Python",
+    # "Les Citations du Président Mao Tse-Toung",
+    # "Don Quichotte de la Manche",
+    # "Un conte de deux villes",
+    # "Le Seigneur des Anneaux",
+    # "Le Petit Prince",
+    # "Harry Potter à l’école des sorciers",
+    # "Dix Petits Nègres",
+    # "Le rêve dans le Pavillon rouge",
+    # "Le Lion, la Sorcière blanche et l’Armoire magique",
+    # "Elle – She : a history of Adventure",
+    # "The Da Vinci Code",
+    # "Réfléchissez et devenez riche",
+    # "Harry Potter et le Prince de Sang mêlé",
+    # "L’Alchimiste",
+    # "Harry Potter et la Chambre des Secrets",
+    # "L’attrape-cœurs, The Catcher in the Rye",
+    # "Narnia"]
+
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
 
-    #liste_readers = note(liste_readers)
-    #matrice = matrice_generator(liste_readers)
-    #matrice_sim = similarity_matrice(liste_readers,matrice)
-    #matrice_sim  = similarity_btw_readers(liste_readers,matrice,matrice_sim)
-    # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
-    # liste_readers = delete_readers(2,liste_readers)
+    liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,5) #livre à recommandé pour lecteur 5 d'index 4 dans liste_readers
+    print("le livre à lire est le livre",livre_recommandation)
 
+
+    # liste_readers = ajouter_readers( 3, "Mathieu", 18, 1, 3, [1,3,4],1 ,[5,4,2])
     fenetre= Tk()
     username = StringVar()
     sexe = StringVar()
