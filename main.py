@@ -6,7 +6,6 @@ import random
 import time
 import tkinter
 from math import *
-from Profile import *
 
 from tkinter import *
 from tkinter.font import names 
@@ -310,7 +309,7 @@ def scenelivre():
     
     
     
-def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_style):
+def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_style,liste_note):
     global liste_readers
     liste_readers.append({"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"})
     fichier = open("readers.txt", "a")
@@ -319,6 +318,12 @@ def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_styl
     fichier2.write("\n" + name)
     for a in liste_like:
         fichier2.write("," + str(a))
+    fichier2.write("%")
+    for a in liste_note:
+        fichier2.write(str(a))
+        if a != liste_note[-1]:
+            fichier2.write(",")
+
     print("Ce lecteur a été ajouté")
 
     return liste_readers
@@ -498,12 +503,6 @@ def recommandation(liste_readers,index_lecteur):
 
     livre_recommandation = liste_reco[note_max]
 
-
-
-
-
-
-    
     return liste_readers,matrice,matrice_sim,livre_recommandation
 
 
@@ -549,7 +548,7 @@ if __name__ == "__main__":
     print("le livre à lire est le livre",livre_recommandation)
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
     # liste_readers = delete_readers(2,liste_readers)
-
+    liste_readers = ajouter_readers( 3, "Mathieu", 18, 1, 3, [1,3,4],1 ,[5,4,2])
     fenetre= Tk()
     username = StringVar()
     sexe = StringVar()
