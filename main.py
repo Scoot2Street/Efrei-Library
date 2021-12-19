@@ -68,8 +68,7 @@ def submit(var,reading_style,username,password,sexe,age):
 def notation(username,age,sexe,img_nbr,liste_like,reading_style,rating):
     liste_note = []
     for i in range(len(rating)):
-        liste_note.append(rating[i].get())
-    
+        liste_note.append(rating[i].get())  
     ajouter_readers(username,age,sexe,img_nbr,liste_like,reading_style,liste_note)
 
 def fenetremain():    
@@ -561,7 +560,7 @@ if __name__ == "__main__":
 
 
 
-
+    
     liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,8) #livre à recommandé pour lecteur 9 d'index 8 dans liste_readers
     print("le livre à lire est le livre",livre_recommandation)
 
