@@ -303,13 +303,16 @@ def scenelivre():
             k+=1
         else:
             i+=1
+
 def suppr(x,delete,edit):
     delete[x].grid_forget()
     edit[x].grid_forget()
     clear()
     scenelivre()
-    
-def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_note):
+
+#function to add a reader with his name,age,genre, liste_like (according to books who has been read by the reader), reading_style and the liste of all note with the same index as liste_like
+# the returned result is the updated liste_reader,readers.txt and booksread.txt    
+def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_note): 
     global liste_readers
     liste_readers.append({"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"})
     fichier = open("readers.txt", "a")
@@ -328,11 +331,13 @@ def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_n
 
     return liste_readers
 
+#function to add a book, checking if the book already exist or not
+#output : the updated liste_livre
 def ajouter_livre(nom_livre):
     global liste_livre
     str(nom_livre)
    
-    fichier = open("books.txt", "r")
+    fichier = open("books.txt", "r")    
     for line in fichier:
         if line == nom_livre:
             print("Ce bouquin existe déja")
@@ -341,7 +346,7 @@ def ajouter_livre(nom_livre):
 
 
             fichier = open("books.txt", "a")
-            fichier.write("\n" + nom_livre +"\n" )
+            fichier.write("\n" + nom_livre +"\n" ) #Write a new book in books.txt
             liste_livre.append(nom_livre)
 
             print("Ce bouquin a été ajouté")
@@ -350,6 +355,8 @@ def ajouter_livre(nom_livre):
 
     return liste_livre
 
+#function to modify the name of the book by replacing his line in the books.txt
+#output : the updated books.txt
 def modifier_livre(nom_livre,nom_modify):
     nom_modify=  str(nom_modify)
     with open("books.txt","r") as fichier:
@@ -360,6 +367,8 @@ def modifier_livre(nom_livre,nom_modify):
     with open("books.txt", "w") as fichier:
         fichier.write(t.replace(nom_livre,nom_modify))
 
+#function to delete a book
+# output : the updated books.txt 
 def delete_book(nom_livre):
     with open("books.txt","r") as fichier:
             t = fichier.read()
@@ -369,6 +378,8 @@ def delete_book(nom_livre):
     with open("books.txt", "w") as fichier:
         fichier.write(t.replace(nom_livre,str()))
 
+#function to delete a readers with his index by 
+#output : the updated readers.txt,booksread.txt and liste_readers
 def delete_readers(index_readers):
     global liste_readers
     with open("readers.txt","r") as fichier:
@@ -396,6 +407,8 @@ def delete_readers(index_readers):
     liste_readers[index_readers] = None
     return liste_readers
 
+#function to generate a matrice with all the readers's note according to the booksread.txt
+#output : a matrice with all the note of the readers
 def matrice_generator(liste_readers):
     matrice = []
     with open('books.txt') as f:
@@ -409,18 +422,17 @@ def matrice_generator(liste_readers):
     for lecteur in range  (0,len(liste_readers)):
         cpt = 0
         for livre_lu in liste_readers[lecteur]["booksread"]:
-            # print("lecteur",lecteur,"livre_lu",livre_lu,"coordonnées",int(livre_lu)-1," + ",lecteur,"note ajoutée",liste_readers[lecteur]["note"][cpt],"cpt",cpt)
 
             matrice[int(livre_lu)-1][lecteur] = int(liste_readers[lecteur]["note"][cpt])
 
             cpt += 1
  
-    # #0 = pas lu 5 = excellent
-    # print (matrice)
 
 
     return matrice
 
+#function who examine the booksread.txt to take all the note and books to put in the list_readers
+#output : add the key ["note"] and ["booksread"] to all readers with two list of note and books
 def note(liste_readers):
     with open('booksread.txt') as fichier:
         a = sum(1 for _ in fichier)
@@ -445,27 +457,23 @@ def note(liste_readers):
                 break
             
     return liste_readers
-    
+
+#function to generate the empty similarity_matrice 
+#output : a newly create matrice_sim who is full of 0
 def similarity_matrice(liste_readers,matrice):
     matrice_sim=[]
     for a in range (0,len(liste_readers)):
         matrice_sim.append([])
         for b in range (0,len(liste_readers)):
             matrice_sim[a].append(0)
-
-        
-    # a1xb1 +a2 * b2 + a3*b3 jusqu à  n (nombre de livres)
-    # divisé par racine de (a1²) + racine de (b1²) +....jusqu à n nombre de livres
     return matrice_sim
 
+#function to generate by the Cosine Similarity the similarity between all readers by applying the formula
+#output : matrice_sim full of information about the similarity between readers
 def similarity_btw_readers(liste_readers,matrice,matrice_sim):
 
-    # for b in range (0,len(matrice)):
-    #     print ("=",matrice[b])
-    
     for b in range (0,len(matrice_sim)):
         for c in range (0,len(matrice_sim[b])):
-            # #lecteur 1 et 3
             val1,val2,val3 = 0,0,0
             for a in range (0,len(matrice)):
                 val1 += matrice[a][b]*matrice[a][c]
@@ -479,6 +487,8 @@ def similarity_btw_readers(liste_readers,matrice,matrice_sim):
     #     print (":",matrice_sim[b])
     return matrice_sim
 
+#function to modify a specific profile of reader to change information by something else in the liste_readers as well as in the readers.txt
+#output : the updated readers.txt and the liste_readers
 def modifier_reader(liste_readers,index,name,age,genre,img_nbr,liste_like,reading_style):
     with open("readers.txt","r") as fichier:
         t = fichier.read()
@@ -491,6 +501,8 @@ def modifier_reader(liste_readers,index,name,age,genre,img_nbr,liste_like,readin
 
     return liste_readers
 
+#the global function who call another function to call from the start of the creation of the matrice to the final recommandation of a book just by specify his index
+#output : the recommanded book for a specific readers (index_lecteur)
 def recommandation(liste_readers,index_lecteur):
     liste_readers = note(liste_readers)
     matrice = matrice_generator(liste_readers)
@@ -498,12 +510,11 @@ def recommandation(liste_readers,index_lecteur):
     matrice_sim  = similarity_btw_readers(liste_readers,matrice,matrice_sim)
     copie = matrice_sim[index_lecteur]
     copie[index_lecteur] = 0
-    maxi = max(copie)
-    index_maxi = copie.index(maxi)
-    a = max([len(liste_readers[index_lecteur]["booksread"]),len(liste_readers[index_maxi]["booksread"])])
-    liste_reco = []
-    key_list = []
-    note_list = []
+    maxi = max(copie)  #In this part, the code is comparing liste of books between the readers and the most closer reader to determine which books to recommend
+    index_maxi = copie.index(maxi) #By writing in an another list all the books who hasn't been read by the reader who has been read by the other "close reader"
+    a = max([len(liste_readers[index_lecteur]["booksread"]),len(liste_readers[index_maxi]["booksread"])]) #After, we determine the book who hasn't been read yet with the better note
+    liste_reco,key_list,note_list = [],[],[]
+
     for b in range(0,len(liste_readers[index_maxi]["booksread"])):
         if liste_readers[index_maxi]["booksread"][b] not in liste_readers[index_lecteur]["booksread"]:
             liste_reco.append(liste_readers[index_maxi]["booksread"][b])
@@ -517,6 +528,9 @@ def recommandation(liste_readers,index_lecteur):
 
     return liste_readers,matrice,matrice_sim,livre_recommandation
 
+
+#function to create a liste of books by taking the information stored in the books.txt
+#output : the newly created liste_livre
 def initialized_liste_livre():
     global liste_livre
     liste_livre = []
@@ -525,6 +539,8 @@ def initialized_liste_livre():
         liste_livre.append(line[0:-1])
     return liste_livre
 
+#function to create a liste of readers by taking all the information stored in readers.txt as well as in the booksread.txt
+#output : a list of dictionnary with a dictionnary per reader named liste_readers
 def initialized_liste_readers():
     fichier = open("readers.txt", "r")
     liste_readers = []
@@ -537,14 +553,15 @@ def initialized_liste_readers():
         
     return liste_readers
     
-def personne_existe(liste_readers,nom):
+#function to check if a reader is in the database
+#the index of the reader and a True or False condition
+def personne_existe(nom):
+    global liste_readers
     for a in range (0,len(liste_readers)):
         if liste_readers[a] != None:
             if liste_readers[a]["name"] == nom:
                 return a,True
     return a,False
-
-
 
 if __name__ == "__main__":
     global liste_readers
@@ -553,9 +570,7 @@ if __name__ == "__main__":
     liste_readers = initialized_liste_readers()
     liste_livre = initialized_liste_livre()
     liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,8) #livre à recommandé pour lecteur 9 d'index 8 dans liste_readers
-    print("le livre à lire est le livre",livre_recommandation)
 
-    a,b = personne_existe(liste_readers,"Lecteur_assidu")
     fenetre= Tk()
     username = StringVar()
     sexe = StringVar()
