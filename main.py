@@ -115,7 +115,7 @@ def fenetremain():
     profile = Button(fenetre,text="Acceder aux profiles existants",command=lambda: [clear(),scene_readers()])
     profile.pack(side=LEFT,expand=YES)
     #add livre button
-    addlivre = Button(fenetre,text="Ajouter un livre",command=lambda: [clear(),scenelivre()])
+    addlivre = Button(fenetre,text="Ajouter un livre",command=lambda: [clear(),scenebook()])
     addlivre.pack(side=LEFT,expand=YES)
     #Recommandation button
     recommandation = Button(fenetre,text="Acceder aux recommandations",command=lambda: [clear(),scenerecommandation()])
@@ -274,16 +274,16 @@ def popup(y):
     top.title("Modification")
     Label(top,text="Entrez le nouveau nom").pack(side=TOP)
     Entry(top,textvariable=nouveau_nom).pack(side=LEFT)
-    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get()),top.destroy(),scenelivre()]).pack(side=LEFT)
+    Button(top,text="Confirmer",command=lambda:[modifier_livre(liste_livre[y],nouveau_nom.get()),top.destroy(),scenebook()]).pack(side=LEFT)
       
 #The window/scene where all of the books are displayed
-def scenelivre():
+def scenebook():
     global liste_livre
     liste_livre = initialized_liste_livre() #Refreshing books database
     livre = StringVar()
     add_livre = Label(fenetre,text="Entrez le nom du livre que vous souhaitez ajouter")
     livreentry = Entry(fenetre,textvariable=livre)
-    entrer = Button(fenetre,text="Entrer",command=lambda:[ajouter_livre(livre.get()),livre.set(""),scenelivre()])
+    entrer = Button(fenetre,text="Entrer",command=lambda:[ajouter_livre(livre.get()),livre.set(""),scenebook()])
     add_livre.grid(row=0,column=0)
     livreentry.grid(row=1,column=0)
     entrer.grid(row=1,column=1)
@@ -317,7 +317,7 @@ def suppr(x,delete,edit):
     delete[x].grid_forget()     #Deleting the delete button of a deleted book
     edit[x].grid_forget()       #Deleting the edit button of a deleted book
     clear()                     #Refreshing the window/scene
-    scenelivre()
+    scenebook()
     
 
 def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_note):
