@@ -443,8 +443,8 @@ def similarity_matrice(liste_readers,matrice):
 
 def similarity_btw_readers(liste_readers,matrice,matrice_sim):
 
-    for b in range (0,len(matrice)):
-        print ("=",matrice[b])
+    # for b in range (0,len(matrice)):
+    #     print ("=",matrice[b])
     
     for b in range (0,len(matrice_sim)):
         for c in range (0,len(matrice_sim[b])):
@@ -458,8 +458,8 @@ def similarity_btw_readers(liste_readers,matrice,matrice_sim):
             val4 = round(val4,2)
             matrice_sim[b][c] = val4
 
-    for b in range (0,len(matrice_sim)):
-        print (":",matrice_sim[b])
+    # for b in range (0,len(matrice_sim)):
+    #     print (":",matrice_sim[b])
     return matrice_sim
 
 def modifier_reader(liste_readers,index,number,name,age,genre,img_nbr,liste_like,reading_style):
@@ -473,6 +473,40 @@ def modifier_reader(liste_readers,index,number,name,age,genre,img_nbr,liste_like
     liste_readers[index] = {"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"} 
 
     return liste_readers
+
+def recommandation(liste_readers,index_lecteur):
+    liste_readers = note(liste_readers)
+    matrice = matrice_generator(liste_readers)
+    matrice_sim = similarity_matrice(liste_readers,matrice)
+    matrice_sim  = similarity_btw_readers(liste_readers,matrice,matrice_sim)
+    copie = matrice_sim[index_lecteur]
+    copie[index_lecteur] = 0
+    maxi = max(copie)
+    index_maxi = copie.index(maxi)
+    a = max([len(liste_readers[index_lecteur]["booksread"]),len(liste_readers[index_maxi]["booksread"])])
+    liste_reco = []
+    key_list = []
+    note_list = []
+    for b in range(0,4):
+        if liste_readers[index_maxi]["booksread"][b] not in liste_readers[index_lecteur]["booksread"]:
+            liste_reco.append(liste_readers[index_maxi]["booksread"][b])
+            key_list.append(liste_readers[index_maxi]["booksread"].index(liste_readers[index_maxi]["booksread"][b]))
+    
+    for c in key_list:
+        note_list.append(liste_readers[index_maxi]["note"][c])
+        note_max = note_list.index(max(note_list))
+
+    livre_recommandation = liste_reco[note_max]
+
+
+
+
+
+
+    
+    return liste_readers,matrice,matrice_sim,livre_recommandation
+
+
 
 if __name__ == "__main__":
     global liste_readers
@@ -511,10 +545,8 @@ if __name__ == "__main__":
 
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
 
-    liste_readers = note(liste_readers)
-    matrice = matrice_generator(liste_readers)
-    matrice_sim = similarity_matrice(liste_readers,matrice)
-    matrice_sim  = similarity_btw_readers(liste_readers,matrice,matrice_sim)
+    liste_readers,matrice,matrice_sim,livre_recommandation = recommandation(liste_readers,3) #livre à recommandé pour lecteur 4 d'index 3 dans liste_readers
+    print("le livre à lire est le livre",livre_recommandation)
     # liste_readers = ajouter_readers(liste_readers, 3, "Mathieu", 18, 1, 3, [1,3,4], "Narnia")  
     # liste_readers = delete_readers(2,liste_readers)
 
