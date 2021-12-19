@@ -110,7 +110,8 @@ def scenerecommandation():
     Label(fenetre,text="Entrez votre pseudo").grid(row=0,column=0)
     Entry(fenetre,textvariable=pseudo).grid(row=0,column=1)
     Button(fenetre,text="Valider",command=lambda:[recom_button(pseudo)]).grid(row=0,column=2)
-    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=1,column=0)
+    Label(fenetre,text="Livre recommandés :").grid(row=1,column=0)
+    hub=Button(fenetre,text="Acceder aux hub",command=lambda: [clear(),fenetremain()]).grid(row=2,column=0)
 
 def recom_button(pseudo):
     pseudo1=StringVar()
@@ -126,7 +127,7 @@ def recom_button(pseudo):
         pseudo1.set("Ce lecteur n'existe pas")
         clear()
         scenerecommandation()
-    Label(fenetre,textvariable=pseudo1).grid(row=1,column=2)
+    Label(fenetre,textvariable=pseudo1).grid(row=1,column=1)
 
 def scene_readers():
     global liste_readers
@@ -533,8 +534,7 @@ def recommandation(index_lecteur):
         note_max = note_list.index(max(note_list))
 
     livre_recommandation = liste_reco[note_max]
-
-    return livre_recommandation
+    return (liste_livre[int(livre_recommandation)])
 
 def initialized_liste_livre():
     global liste_livre
