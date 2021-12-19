@@ -83,7 +83,7 @@ def submit(var1,var2,var3,var4,var5,var6,var7,var8,var9,var10,reading_style,user
     print(liste_like)
     number=1
     img_nbr = 1
-    ajouter_readers(number,username,age,sexe,img_nbr,liste_like,reading_style)
+    ajouter_readers(username,age,sexe,img_nbr,liste_like,reading_style)
 
 def notation(rating):
     global liste_like
@@ -336,7 +336,7 @@ def scenelivre():
     
 
     
-def ajouter_readers( number, name, age, genre, img_nbr, liste_like, reading_style,liste_note):
+def ajouter_readers(name, age, genre, img_nbr, liste_like, reading_style,liste_note):
     global liste_readers
     liste_readers.append({"name":name,"sexe":genre,"age":age,"img_picture":img_nbr,"reading_style":reading_style,"favorite_book":"Narnia"})
     fichier = open("readers.txt", "a")
